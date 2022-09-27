@@ -64,7 +64,7 @@ public class DriveConstants {
      * small and gradually increase them later after everything is working. All distance units are
      * inches.
      */
-    public static double MAX_VEL = 30.85600128;
+    public static double MAX_VEL = 25.235357464651266;
     public static double MAX_ACCEL = 30.85600128; ///recommended keep the same as MAX_VEL, although this number is arbitrary
     //only way to find out is through experimentation
     public static double MAX_ANG_VEL = Math.toRadians(60);//max velo/track width, but determine through experimentation

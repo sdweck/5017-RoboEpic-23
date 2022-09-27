@@ -69,7 +69,7 @@ public class MaxVelocityTuner extends LinearOpMode {
 
         double effectiveKf = DriveConstants.getMotorVelocityF(veloInchesToTicks(maxVelocity));
 
-        telemetry.addData("Max Velocity", maxVelocity);
+        telemetry.addData("max velocity", maxVelocity);
         telemetry.addData("Voltage Compensated kF", effectiveKf * batteryVoltageSensor.getVoltage() / 12);
         telemetry.update();
 
