@@ -67,8 +67,8 @@ public class DriveConstants {
     public static double MAX_VEL = 25.235357464651266;
     public static double MAX_ACCEL = 30.85600128; ///recommended keep the same as MAX_VEL, although this number is arbitrary
     //only way to find out is through experimentation
-    public static double MAX_ANG_VEL = Math.toRadians(60);//max velo/track width, but determine through experimentation
-    public static double MAX_ANG_ACCEL = Math.toRadians(60);
+    public static double MAX_ANG_VEL = Math.toRadians(171.95);//max velo/track width, but determine through experimentation
+    public static double MAX_ANG_ACCEL = Math.toRadians(171.95);
 
 
     public static double encoderTicksToInches(double ticks) {
