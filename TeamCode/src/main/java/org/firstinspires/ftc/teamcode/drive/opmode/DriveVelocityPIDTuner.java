@@ -82,7 +82,7 @@ public class DriveVelocityPIDTuner extends LinearOpMode {
         double lastKp = MOTOR_VELO_PID.p;
         double lastKi = MOTOR_VELO_PID.i;
         double lastKd = MOTOR_VELO_PID.d;
-        double lastKf = MOTOR_VELO_PID.f;
+        double lastKf = -1 * MOTOR_VELO_PID.f;
 
         drive.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, MOTOR_VELO_PID);
 
