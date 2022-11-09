@@ -37,22 +37,18 @@ class Node:
             time = 2    
         return time
 
-    def set_left(self, node):
-        self.left = node
-    
-    def set_right(self, node):
-        self.right = node
-        
+       
     def index(self):
         for x in range(2):
             for y in range(2):
-                curr_node = grid[x][y]
+                self = grid[x][y]
                 if y+1 < 3:
-                    curr_node.left = grid[x][y+1]
+                    self.left = grid[x][y+1]
                 if x+1 < 3:
-                    curr_node.right = grid[x+1][y+1]
-            
-        
+                    self.right = grid[x+1][y+1]
+
+
+#grid in which class? --> assigning in index() in Node but grabbing from array with Node objects 
 grid = [
     Node(0,0,2),Node(0,1,3),Node(0,2,2),Node(0,3,3),Node(0,4,2),
     Node(1,0,3),Node(1,1,4),Node(1,2,5),Node(1,3,4),Node(1,4,3),
@@ -62,4 +58,6 @@ grid = [
 ]
 
 
+#complete all nodes with attributes of nodes left/right to them
+index()
 print(s.path)
