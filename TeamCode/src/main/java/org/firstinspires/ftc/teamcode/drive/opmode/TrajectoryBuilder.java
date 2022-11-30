@@ -22,7 +22,7 @@ public class TrajectoryBuilder extends LinearOpMode {
               //  .splineTo(new Vector2d(30, 0), Math.toRadians(90))
 
 
-//                .forward(40)
+//             .forward(40)
 //                .strafeRight(60.3)
                 // .strafeLeft(60.3)
 //                .back(10)
@@ -67,10 +67,11 @@ public class TrajectoryBuilder extends LinearOpMode {
 
 
         waitForStart();
-        waitForStart();
 
         drive.followTrajectory(toJunction);
         drive.followTrajectorySequence(wait);
+
+
         drive.followTrajectory(backToStart);
         drive.followTrajectory(goBack);
         drive.followTrajectory(backToStart2);

@@ -97,7 +97,7 @@ public class SampleMecanumDrive extends MecanumDrive {
 
         // TODO: If the hub containing the IMU you are using is mounted so that the "REV" logo does
         // not face up, remap the IMU axes so that the z-axis points upward (normal to the floor.)
-        .`       //
+        //
         //             | +Z axis
         //             |
         //             |
