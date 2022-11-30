@@ -25,7 +25,7 @@ public class DriveConstants {
 
     /*
      * Set RUN_USING_ENCODER to true to enable built-in hub velocity control using drive encoders.
-     * Set this flag to false if drive encoders are not present and an alternative localization
+     * Set this flag to false if drive encod    ers are not present and an alternative localization
      * method is in use (e.g., tracking wheels).
      *
      * If using the built-in motor velocity PID, update MOTOR_VELO_PID with the tuned coefficients
@@ -33,7 +33,9 @@ public class DriveConstants {
      */
     public static final boolean RUN_USING_ENCODER = true;
     public static PIDFCoefficients MOTOR_VELO_PID = new PIDFCoefficients(0, 0, 0,
-            getMotorVelocityF(MAX_RPM / 60 * TICKS_PER_REV));
+            8);
+
+    //getMotorVelocityF(MAX_RPM / 60 * TICKS_PER_REV)
 
     /*
      * These are physical constants that can be determined from your robot (including the track
@@ -64,8 +66,8 @@ public class DriveConstants {
      * small and gradually increase them later after everything is working. All distance units are
      * inches.
      */
-    public static double MAX_VEL = 25.235357464651266;
-    public static double MAX_ACCEL = 30.85600128; ///recommended keep the same as MAX_VEL, although this number is arbitrary
+    public static double MAX_VEL = 35;
+    public static double MAX_ACCEL = 35; ///recommended keep the same as MAX_VEL, although this number is arbitrary
     //only way to find out is through experimentation
     public static double MAX_ANG_VEL = Math.toRadians(171.95);//max velo/track width, but determine through experimentation
     public static double MAX_ANG_ACCEL = Math.toRadians(171.95);
