@@ -32,16 +32,16 @@ public class TrajectoryBuilder extends LinearOpMode {
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
 
         Trajectory toJunction = drive.trajectoryBuilder(new Pose2d())
-                .strafeRight(45)
+                .strafeRight(28)
                 .build();
 
         TrajectorySequence wait = drive.trajectorySequenceBuilder(toJunction.end())
                 .waitSeconds(3)
                 .build();
 //ARM CODE
-        LiftUpForDistance(0.75, 1);
+        LiftUpForDistance(0.75, 0.01);
         Intake(0);
-        LiftDownForDistance(0.75, 0.5);
+       // LiftDownForDistance(0.75, 0.5);
 
         Trajectory goForward = drive.trajectoryBuilder(wait.end())
                 .forward(2)
@@ -75,7 +75,7 @@ public class TrajectoryBuilder extends LinearOpMode {
         //LiftDownForDistance(0.75,0.5);
 
 
-       drive.followTrajectory(toJunction);
+       //drive.followTrajectory(toJunction);
 //        drive.followTrajectorySequence(wait);
 //        //Arm Code UP
 //        drive.followTrajectory(goForward);
