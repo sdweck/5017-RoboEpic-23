@@ -39,6 +39,9 @@ public class TrajectoryBuilder extends LinearOpMode {
                 .waitSeconds(3)
                 .build();
 //ARM CODE
+        LiftUpForDistance(0.75, 1);
+        Intake(0);
+        LiftDownForDistance(0.75, 0.5);
 
         Trajectory goForward = drive.trajectoryBuilder(wait.end())
                 .forward(2)
