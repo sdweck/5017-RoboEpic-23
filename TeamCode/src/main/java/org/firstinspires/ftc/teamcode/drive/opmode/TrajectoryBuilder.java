@@ -6,6 +6,11 @@ import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.DcMotor;
+
+
 
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
@@ -13,40 +18,34 @@ import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 @Config
 @Autonomous(group = "drive")
 public class TrajectoryBuilder extends LinearOpMode {
+    // Instance variables corresponding to our various motors/servos.
+    private Servo INTAKE;
+    private DcMotor LIFT;
+
+    final double encRotation = 537.6;
+
     @Override
     public void runOpMode() {
+        INTAKE = hardwareMap.servo.get("INTAKE");
+        LIFT = hardwareMap.dcMotor.get("LIFT");
+        LIFT.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
 
         Trajectory toJunction = drive.trajectoryBuilder(new Pose2d())
                 .strafeRight(45)
-              //  .splineTo(new Vector2d(30, 0), Math.toRadians(90))
-
-
-//             .forward(40)
-//                .strafeRight(60.3)
-                // .strafeLeft(60.3)
-//                .back(10)
-
-
-//                                .turn(Math.toRadians(90))
-//                                .splineTo(new Vector2d(25, -15), 0)
-//                                .waitSeconds(3)
-//                                .turn(Math.toRadians(45))
-//                               .forward(60.3)
-                // .strafeRight(25)
-//                                .turn(Math.toRadians(90))
-//                .splineTo(new Vector2d(-60.3, -62.9), 0)
-//                .(Math.toRadians(90))
-//                                .forward(60.3)
-//                                .turn(Math.toRadians(90))
-//                                .forward(25)
-//                                .strafeLeft(5)
-//                                .waitSeconds(1)
-//                                .splineToLinearHeading(new Pose2d(-10, -10, Math.toRadians(45)), 0)
                 .build();
 
         TrajectorySequence wait = drive.trajectorySequenceBuilder(toJunction.end())
                 .waitSeconds(3)
+                .build();
+//ARM CODE
+
+        Trajectory goForward = drive.trajectoryBuilder(wait.end())
+                .forward(2)
+                .build();
+
+        Trajectory goBack2 = drive. trajectoryBuilder(goForward.end())
+                .back(2)
                 .build();
 
         Trajectory backToStart = drive.trajectoryBuilder(toJunction.end())
@@ -68,14 +67,23 @@ public class TrajectoryBuilder extends LinearOpMode {
 
         waitForStart();
 
-        drive.followTrajectory(toJunction);
-        drive.followTrajectorySequence(wait);
+        //LiftUpForDistance(0.75, 1);
+       // Intake(0);
+        //LiftDownForDistance(0.75,0.5);
 
 
-        drive.followTrajectory(backToStart);
-        drive.followTrajectory(goBack);
-        drive.followTrajectory(backToStart2);
-        drive.followTrajectory(toJunction2);
+       drive.followTrajectory(toJunction);
+//        drive.followTrajectorySequence(wait);
+//        //Arm Code UP
+//        drive.followTrajectory(goForward);
+//        //Arm Go Down
+//        //Arm Go Up
+//        drive.followTrajectory(goBack2);
+//    //Arm Go Completely Down
+//        drive.followTrajectory(backToStart);
+//        drive.followTrajectory(goBack);
+//        drive.followTrajectory(backToStart2);
+//        drive.followTrajectory(toJunction2);
 
 
 
@@ -91,5 +99,34 @@ public class TrajectoryBuilder extends LinearOpMode {
         if(isStopRequested()) return;
 
 
+    }
+//    private void stopEverything() {
+//        LIFT.setPower(0);
+//        INTAKE.setPower(0);
+//    }
+    private void LiftUpForDistance(double power, double revolutions) {
+        int denc = (int) Math.round(revolutions * encRotation);
+
+        LIFT.setDirection(DcMotorSimple.Direction.FORWARD);
+        LIFT.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        LIFT.setTargetPosition(denc);
+        LIFT.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        LIFT.setPower(power);
+    }
+
+    private void LiftDownForDistance(double power, double revolutions) {
+        int denc = (int)Math.round(revolutions * encRotation);
+
+        LIFT.setDirection(DcMotorSimple.Direction.REVERSE);
+        LIFT.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        LIFT.setTargetPosition(denc);
+        LIFT.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        LIFT.setPower(power);
+    }
+    private void Intake(double position) {
+        INTAKE.setPosition(position);
+    }
+    private void resetEncoders() {
+        LIFT.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
 }
