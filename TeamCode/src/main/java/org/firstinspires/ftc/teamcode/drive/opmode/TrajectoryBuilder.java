@@ -32,15 +32,15 @@ public class TrajectoryBuilder extends LinearOpMode {
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
 
         Trajectory toJunction = drive.trajectoryBuilder(new Pose2d())
-                .strafeRight(28)
+                .strafeRight(80)
                 .build();
 
         TrajectorySequence wait = drive.trajectorySequenceBuilder(toJunction.end())
                 .waitSeconds(3)
                 .build();
 //ARM CODE
-        LiftUpForDistance(0.75, 0.01);
-        Intake(0);
+      //  LiftUpForDistance(0.75, 0.01);
+        //Intake(0);
        // LiftDownForDistance(0.75, 0.5);
 
         Trajectory goForward = drive.trajectoryBuilder(wait.end())
@@ -50,13 +50,20 @@ public class TrajectoryBuilder extends LinearOpMode {
         Trajectory goBack2 = drive. trajectoryBuilder(goForward.end())
                 .back(2)
                 .build();
+      // Trajectory toConeLine = drive.trajectoryBuilder(goBack2.end())
+              // .back()MEASURE/TEST DISTANCE!!
+    //    Trajectory toJunction1 = drive.trajectoryBuilder(goBack2.end())
+              //  .forward()MEASURE/TEST DISTANCE
+        //Intake move
+
+        //Go for second cone
+
+
 
         Trajectory backToStart = drive.trajectoryBuilder(toJunction.end())
                 //.splineTo(new Vector2d(-30, 0), Math.toRadians(90))
-                .strafeLeft(47)
-
+                .strafeLeft(80)
                 .build();
-
         Trajectory goBack = drive.trajectoryBuilder(backToStart.end())
                 .back(13)
                 .build();
@@ -64,29 +71,33 @@ public class TrajectoryBuilder extends LinearOpMode {
                 .forward(13)
                 .build();
         Trajectory toJunction2 = drive.trajectoryBuilder(backToStart2.end())
-                .strafeRight(30)
+                .strafeRight(50)
                 .build();
+
+
 
 
         waitForStart();
 
-        //LiftUpForDistance(0.75, 1);
+       // LiftUpForDistance(0.75, 0.5);
        // Intake(0);
         //LiftDownForDistance(0.75,0.5);
 
 
-       //drive.followTrajectory(toJunction);
-//        drive.followTrajectorySequence(wait);
+       drive.followTrajectory(toJunction);
+       drive.followTrajectorySequence(wait);
 //        //Arm Code UP
-//        drive.followTrajectory(goForward);
+     drive.followTrajectory(goForward);
 //        //Arm Go Down
 //        //Arm Go Up
-//        drive.followTrajectory(goBack2);
+        drive.followTrajectory(goBack2);
+        //drive.followTrajectory(toConeLine);
+        //drive.followTrajectory(toJunction1);
 //    //Arm Go Completely Down
-//        drive.followTrajectory(backToStart);
-//        drive.followTrajectory(goBack);
-//        drive.followTrajectory(backToStart2);
-//        drive.followTrajectory(toJunction2);
+        drive.followTrajectory(backToStart);
+        //drive.followTrajectory(goBack);
+      //  drive.followTrajectory(backToStart2);
+     //  drive.followTrajectory(toJunction2);
 
 
 
