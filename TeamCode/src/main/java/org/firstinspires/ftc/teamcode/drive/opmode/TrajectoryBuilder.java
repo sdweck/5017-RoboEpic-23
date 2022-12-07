@@ -1,3 +1,4 @@
+//Note: When strafing, robot will go ten less than you put in code
 package org.firstinspires.ftc.teamcode.drive.opmode;
 
 import com.acmerobotics.dashboard.config.Config;
@@ -44,11 +45,11 @@ public class TrajectoryBuilder extends LinearOpMode {
        // LiftDownForDistance(0.75, 0.5);
 
         Trajectory goForward = drive.trajectoryBuilder(wait.end())
-                .forward(2)
+                .forward(5)
                 .build();
 
         Trajectory goBack2 = drive. trajectoryBuilder(goForward.end())
-                .back(2)
+                .back(5)
                 .build();
       // Trajectory toConeLine = drive.trajectoryBuilder(goBack2.end())
               // .back()MEASURE/TEST DISTANCE!!
@@ -62,10 +63,10 @@ public class TrajectoryBuilder extends LinearOpMode {
 
         Trajectory backToStart = drive.trajectoryBuilder(toJunction.end())
                 //.splineTo(new Vector2d(-30, 0), Math.toRadians(90))
-                .strafeLeft(80)
+                .strafeLeft(75)
                 .build();
         Trajectory goBack = drive.trajectoryBuilder(backToStart.end())
-                .back(13)
+                .back(23)
                 .build();
         Trajectory backToStart2 = drive.trajectoryBuilder(goBack.end())
                 .forward(13)
@@ -73,6 +74,13 @@ public class TrajectoryBuilder extends LinearOpMode {
         Trajectory toJunction2 = drive.trajectoryBuilder(backToStart2.end())
                 .strafeRight(50)
                 .build();
+        Trajectory toConeLine2 = drive.trajectoryBuilder(toJunction2.end())
+                .forward(2)
+                .build();
+        Trajectory goBack3 = drive.trajectoryBuilder(toConeLine2.end())
+                .back(2)
+                .build();
+
 
 
 
@@ -95,9 +103,12 @@ public class TrajectoryBuilder extends LinearOpMode {
         //drive.followTrajectory(toJunction1);
 //    //Arm Go Completely Down
         drive.followTrajectory(backToStart);
-        //drive.followTrajectory(goBack);
-      //  drive.followTrajectory(backToStart2);
-     //  drive.followTrajectory(toJunction2);
+        drive.followTrajectory(goBack);
+      //drive.followTrajectory(backToStart2);
+     //drive.followTrajectory(toJunction2);
+      //  drive.followTrajectory(toConeLine2);
+       // drive.followTrajectory(goBack3);
+
 
 
 
