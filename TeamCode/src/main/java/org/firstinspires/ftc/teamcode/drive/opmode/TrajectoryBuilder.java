@@ -30,23 +30,26 @@ public class TrajectoryBuilder extends LinearOpMode {
         INTAKE = hardwareMap.servo.get("INTAKE");
         LIFT = hardwareMap.dcMotor.get("LIFT");
         LIFT.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
 
-        Trajectory toJunction = drive.trajectoryBuilder(new Pose2d())
+        //
+
+    Trajectory toJunction = drive.trajectoryBuilder(new Pose2d())
                 .strafeRight(80)
                 .build();
 
-        TrajectorySequence wait = drive.trajectorySequenceBuilder(toJunction.end())
-                .waitSeconds(3)
-                .build();
-//ARM CODE
-      //  LiftUpForDistance(0.75, 0.01);
-        //Intake(0);
-       // LiftDownForDistance(0.75, 0.5);
-
-        Trajectory goForward = drive.trajectoryBuilder(wait.end())
+    Trajectory goForward = drive.trajectoryBuilder(toJunction.end())
                 .forward(5)
                 .build();
+
+        LiftUpForDistance(1, -0.1);
+        // Intake(0.25)
+        sleep(5000);
+        /*TrajectorySequence wait2 = drive.trajectorySequenceBuilder(toJunction.end())
+                        .waitSeconds(3)
+                        .build();*/
+        LiftDownForDistance(1,-0.75);
 
         Trajectory goBack2 = drive. trajectoryBuilder(goForward.end())
                 .back(5)
@@ -61,7 +64,7 @@ public class TrajectoryBuilder extends LinearOpMode {
 
 
 
-        Trajectory backToStart = drive.trajectoryBuilder(toJunction.end())
+        /*Trajectory backToStart = drive.trajectoryBuilder(toJunction.end())
                 //.splineTo(new Vector2d(-30, 0), Math.toRadians(90))
                 .strafeLeft(75)
                 .build();
@@ -79,35 +82,28 @@ public class TrajectoryBuilder extends LinearOpMode {
                 .build();
         Trajectory goBack3 = drive.trajectoryBuilder(toConeLine2.end())
                 .back(2)
-                .build();
-
-
-
-
+                .build();*/
 
         waitForStart();
 
-       // LiftUpForDistance(0.75, 0.5);
-       // Intake(0);
-        //LiftDownForDistance(0.75,0.5);
+       //LiftUpForDistance(1, -0.1);
+      // Intake(0.25)
 
+      //LiftDownForDistance(1,-0.75);
 
-       drive.followTrajectory(toJunction);
-       drive.followTrajectorySequence(wait);
-//        //Arm Code UP
-     drive.followTrajectory(goForward);
-//        //Arm Go Down
-//        //Arm Go Up
-        drive.followTrajectory(goBack2);
-        //drive.followTrajectory(toConeLine);
+      drive.followTrajectory(toJunction);
+      drive.followTrajectory(goForward);
+      drive.followTrajectory(goBack2);
+      //drive.followTrajectory(toConeLine);
         //drive.followTrajectory(toJunction1);
 //    //Arm Go Completely Down
-        drive.followTrajectory(backToStart);
-        drive.followTrajectory(goBack);
+        //drive.followTrajectory(backToStart);
+       // drive.followTrajectory(goBack);
       //drive.followTrajectory(backToStart2);
      //drive.followTrajectory(toJunction2);
       //  drive.followTrajectory(toConeLine2);
        // drive.followTrajectory(goBack3);
+        //drive.followTrajectorySequence(wait2);
 
 
 
@@ -125,10 +121,12 @@ public class TrajectoryBuilder extends LinearOpMode {
 
 
     }
-//    private void stopEverything() {
-//        LIFT.setPower(0);
-//        INTAKE.setPower(0);
-//    }
+
+    private void stopEverything() {
+        LIFT.setPower(0);
+       // INTAKE.setPower(0);
+    }
+//Note!! If revolutions negative, the linear slide will go UP
     private void LiftUpForDistance(double power, double revolutions) {
         int denc = (int) Math.round(revolutions * encRotation);
 
