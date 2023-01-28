@@ -15,8 +15,8 @@ import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 //import java.awt.
 
 @Config
-@Autonomous(name = "AutoBlue", group = "drive")
-public class TrajectoryBuilder extends LinearOpMode{
+@Autonomous(name = "AutoRed", group = "drive")
+public class AutoRed extends LinearOpMode{
 
     // Instance variables corresponding to our various motors/servos.
     private DcMotor LEFTBACK; //2:0
@@ -52,18 +52,37 @@ public class TrajectoryBuilder extends LinearOpMode{
         waitForStart();
 
         if (opModeIsActive()) {
-            ARM.setPosition(.855);
             // START WITH PRELOAD LIFTED
             LiftUpForTime(-1, 1.8);
             // GO FORWARD TO READ SPECIAL CONE
             Trajectory goForward1 = drive.trajectoryBuilder(new Pose2d())
-                    .forward(16)
+                    .forward(17 )
                     .build();
             drive.followTrajectory(goForward1);
-            Trajectory CrabABit = drive.trajectoryBuilder(goForward1.end())
-                    .strafeRight(9)
+            Trajectory D = drive.trajectoryBuilder(goForward1.end())
+                    .strafeRight(3)
                     .build();
-            drive.followTrajectory(CrabABit);
+            drive.followTrajectory(D);
+            LiftUpForTime(1, 0.25);
+            INTAKE.setPosition(.25);
+            Trajectory goForward2 = drive.trajectoryBuilder(goForward1.end())
+                    .forward(5)
+                    .build();
+            drive.followTrajectory(goForward2);
+            Trajectory E = drive.trajectoryBuilder(goForward2.end())
+                    .strafeRight(10)
+                    .build();
+            drive.followTrajectory(E);
+
+            Trajectory Strait = drive.trajectoryBuilder(E.end())
+                    .forward(10)
+                    .build();
+            drive.followTrajectory(Strait);
+
+            /*Trajectory CrabABit = drive.trajectoryBuilder(goForward1.end())
+                    .strafeRight(2)
+                    .build();
+            drive.followTrajectory(CrabABit);*/
            /* Trajectory goForwardATad = drive.trajectoryBuilder(CrabABit.end())
                     .forward(7)
                     .build();
@@ -81,23 +100,21 @@ public class TrajectoryBuilder extends LinearOpMode{
             double redVal = COLORSENSOR.red();
             double greenVal = COLORSENSOR.green();
             double blueVal = COLORSENSOR.blue();
-            Trajectory goPosition = drive.trajectoryBuilder(CrabABit.end())
-                    .strafeLeft(9)
+
+            /*Trajectory goPosition = drive.trajectoryBuilder(goForward1.end())
+                    .forward(20)
                     .build();
             drive.followTrajectory(goPosition);
-            Trajectory goForwardASmidge = drive.trajectoryBuilder(CrabABit.end())
-                    .forward(12)
-                    .build();
-            drive.followTrajectory(goForwardASmidge);
 
-            Trajectory Crab1 = drive.trajectoryBuilder(goForward1.end())
-                    .strafeLeft(22)
+
+            Trajectory Crab1 = drive.trajectoryBuilder(goPosition.end())
+                    .strafeRight(5)
                     .build();
-            drive.followTrajectory(Crab1);
+            drive.followTrajectory(Crab1);*/
             //
             // PRELOAD
-            Trajectory goBack = drive.trajectoryBuilder(Crab1.end())
-                    .back(3)
+            /*Trajectory goBack = drive.trajectoryBuilder(Crab1.end())
+                    .back(5)
                     .build();
             drive.followTrajectory(goBack);
 
@@ -107,7 +124,7 @@ public class TrajectoryBuilder extends LinearOpMode{
                     .forward(7)
                     .build();
             drive.followTrajectory(goForward2);
-           /* drive.turn(Math.toRadians(-90));
+           *//* drive.turn(Math.toRadians(-90));
           Trajectory align = drive.trajectoryBuilder(goForward2.end().plus(new Pose2d(0, 0, Math.toRadians(-90))), false)
                   .forward(15)
                           .build();
@@ -181,29 +198,37 @@ public class TrajectoryBuilder extends LinearOpMode{
             Trajectory toTallJunc3 = drive.trajectoryBuilder(For.end())
                     .strafeRight(17)
                     .build();
-            drive.followTrajectory(toTallJunc3);*/
-
-           // if red go to zone 1
-          if (redVal > greenVal && redVal > blueVal) {
-                Trajectory Red = drive.trajectoryBuilder(goForward2.end())
-                        .strafeLeft(18)
+            drive.followTrajectory(toTallJunc3);*//*
+*/
+            // if red go to zone 1
+            if (redVal > greenVal && redVal > blueVal) {
+                Trajectory Red1 = drive.trajectoryBuilder(goForward2.end())
+                        .forward(7)
                         .build();
-              drive.followTrajectory(Red);
+                drive.followTrajectory(Red1);
+                Trajectory Red = drive.trajectoryBuilder(Red1.end())
+                        .strafeLeft(15)
+                        .build();
+                drive.followTrajectory(Red);
 
 
             }
             // if blue go to zone 2 (already there no if statement)
-          else if (blueVal  > redVal && blueVal > greenVal) {
-              Trajectory Blue = drive.trajectoryBuilder(goForward2.end())
-                      .strafeRight(7)
-                      .build();
-              drive.followTrajectory(Blue);
-          }
+           /* else if (blueVal  > redVal && blueVal > greenVal) {
+                Trajectory Blue = drive.trajectoryBuilder(Crab1.end())
+                        .strafeRight(7)
+                        .build();
+                drive.followTrajectory(Blue);
+            }*/
 
 
             else if (greenVal > redVal && greenVal > blueVal) {
-                Trajectory Green = drive.trajectoryBuilder(goForward2.end())
-                        .strafeRight(25)
+                Trajectory Red1 = drive.trajectoryBuilder(goForward2.end())
+                        .forward(7)
+                        .build();
+                drive.followTrajectory(Red1);
+                Trajectory Green = drive.trajectoryBuilder(Red1.end())
+                        .strafeRight(15)
                         .build();
                 drive.followTrajectory(Green);
 
@@ -268,7 +293,7 @@ public class TrajectoryBuilder extends LinearOpMode{
 
         stopEverything();
     }
-//This is not using roadrunner! - DO NOT USE, not deleting as I think it affects the CrabforDistance function
+    //This is not using roadrunner! - DO NOT USE, not deleting as I think it affects the CrabforDistance function
     private void TurnForDistance(double power, double revolutions) {
         int denc = (int)Math.round(revolutions * encRotation);
 
