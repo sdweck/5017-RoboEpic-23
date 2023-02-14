@@ -15,8 +15,8 @@ import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 //import java.awt.
 
 @Config
-@Autonomous(name = "TESTING2", group = "drive")
-public class TESTING extends LinearOpMode{
+@Autonomous(name = "AutoRedLeft", group = "drive")
+public class AutoRedLeft extends LinearOpMode{
 
     // Instance variables corresponding to our various motors/servos.
     private DcMotor LEFTBACK; //2:0
@@ -52,6 +52,87 @@ public class TESTING extends LinearOpMode{
         waitForStart();
 
         if (opModeIsActive()) {
+            //Sensing Signal Cone
+            Trajectory StrafetoSignalCone = drive.trajectoryBuilder(new Pose2d())
+                    .forward(19)
+                    .build();
+            drive.followTrajectory(StrafetoSignalCone);
+            Trajectory StrafetoSenseSignalCone = drive.trajectoryBuilder(StrafetoSignalCone.end())
+                    //TEST THE STRAFING VALUE//
+                    .strafeRight(2.5)
+                    .build();
+            drive.followTrajectory(StrafetoSenseSignalCone);
+            while (COLORSENSOR.red() == 0 && opModeIsActive()){
+                // crab to the righct
+                telemetry.addData("Red", COLORSENSOR.red());
+                telemetry.addData("Green", COLORSENSOR.green());
+                telemetry.addData("Blue", COLORSENSOR.blue());
+                telemetry.update();
+            }
+
+            double redVal = COLORSENSOR.red();
+            double greenVal = COLORSENSOR.green();
+            double blueVal = COLORSENSOR.blue();
+            //Forward to Medium Junction
+            Trajectory ForwardtoMedJunction = drive.followTrajectory(StrafetoSenseSignalCone.end())
+                    .forward(24)
+                    .build();
+            drive.followTrajectory(ForwardtoMedJunction);
+            //Lift up
+            Trajectory StrafeRightoScoreMedJunction = drive.trajectoryBuilder(ForwardtoMedJunction.end())
+                    .strafeRight(3)
+                    .build();
+            drive.followTrajectory(StrafeRightoScoreMedJunction);
+            //CONE DROP
+            Trajectory StrafeLefttoRecenter = drive.trajectoryBuilder(ForwardtoMedJunction.end())
+                    .strafeLeft(3)
+                    .build();
+            drive.followTrajectory(StrafeLefttoRecenter);
+            Trajectory ForwardtoAlignwithStack = drive.trajectoryBuilder(ForwardtoMedJunction.end())
+                    .forward(29)
+                    .build();
+            drive.followTrajectory(ForwardtoAlignwithStack);
+            //Lower Lift
+            //Pick Up Stack
+            //Lift Lift
+            Trajectory BackwardstoStackJunction = drive.trajectoryBuilder(ForwardtoMedJunction.end())
+                    .back(36)
+                    .build();
+            drive.followTrajectory(BackwardstoStackJunction);
+            Trajectory StrafeRightoAlignHighJunction = drive.trajectoryBuilder(ForwardtoMedJunction.end())
+                    .strafeRight(3)
+                    .build();
+            drive.followTrajectory(StrafeRightoAlignHighJunction);
+            //swing arm back right
+            //lift lidt
+            //drop lidt
+            //drop cone
+            //lift up
+            //park in signal zone
+            if (redVal > greenVal && redVal > blueVal) {
+                Trajectory Red = drive.trajectoryBuilder(StrafeRightoAlignHighJunction.end())
+                        .strafeLeft(18)
+                        .build();
+                drive.followTrajectory(Red);
+
+
+            }
+            // if blue go to zone 2 (already there no if statement)
+            else if (blueVal  > redVal && blueVal > greenVal) {
+                Trajectory Blue = drive.trajectoryBuilder(StrafeRightoAlignHighJunction.end())
+                        .forward(7)
+                        .build();
+                drive.followTrajectory(Blue);
+            }
+
+
+            else if (greenVal > redVal && greenVal > blueVal) {
+                Trajectory Green = drive.trajectoryBuilder(StrafeRightoAlignHighJunction.end())
+                        .strafeRight(25)
+                        .build();
+                drive.followTrajectory(Green);
+
+
 
         }
     }
@@ -193,3 +274,4 @@ public class TESTING extends LinearOpMode{
     }
 
 }
+
