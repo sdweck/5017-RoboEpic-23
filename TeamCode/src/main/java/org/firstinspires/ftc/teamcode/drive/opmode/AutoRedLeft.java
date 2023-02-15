@@ -54,14 +54,17 @@ public class AutoRedLeft extends LinearOpMode{
         if (opModeIsActive()) {
             //Sensing Signal Cone
             Trajectory StrafetoSignalCone = drive.trajectoryBuilder(new Pose2d())
-                    .forward(19)
+                    .forward(16)
                     .build();
             drive.followTrajectory(StrafetoSignalCone);
             Trajectory StrafetoSenseSignalCone = drive.trajectoryBuilder(StrafetoSignalCone.end())
-                    //TEST THE STRAFING VALUE//
-                    .strafeRight(2.5)
+                    .strafeRight(7)
                     .build();
             drive.followTrajectory(StrafetoSenseSignalCone);
+            Trajectory StrafeAwaySignalCone = drive.trajectoryBuilder(StrafetoSignalCone.end())
+                    .strafeLeft(7)
+                    .build();
+            drive.followTrajectory(StrafeAwaySignalCone);
             while (COLORSENSOR.red() == 0 && opModeIsActive()){
                 // crab to the righct
                 telemetry.addData("Red", COLORSENSOR.red());
@@ -74,16 +77,19 @@ public class AutoRedLeft extends LinearOpMode{
             double greenVal = COLORSENSOR.green();
             double blueVal = COLORSENSOR.blue();
             //Forward to Medium Junction
-            Trajectory ForwardtoMedJunction = drive.followTrajectory(StrafetoSenseSignalCone.end())
+            Trajectory ForwardtoMedJunction = drive.trajectoryBuilder(StrafeAwaySignalCone.end())
                     .forward(24)
                     .build();
             drive.followTrajectory(ForwardtoMedJunction);
-            //Lift up
+            LiftUpForTime(-1, 1.8);
             Trajectory StrafeRightoScoreMedJunction = drive.trajectoryBuilder(ForwardtoMedJunction.end())
                     .strafeRight(3)
                     .build();
             drive.followTrajectory(StrafeRightoScoreMedJunction);
-            //CONE DROP
+            LiftUpForTime(1, .1);
+            INTAKE.setPosition(.25);
+            LiftUpForTime(-.10, .1);
+
             Trajectory StrafeLefttoRecenter = drive.trajectoryBuilder(ForwardtoMedJunction.end())
                     .strafeLeft(3)
                     .build();
@@ -92,11 +98,15 @@ public class AutoRedLeft extends LinearOpMode{
                     .forward(15)
                     .build();
             drive.followTrajectory(ForwardtoAlignwithStack);
+            //Turn to face Cone stack straight on
             drive.turn(Math.toRadians(90));
-            //Lower Lift
-            //Pick Up Stack
-            //Lift Lift
-            Trajectory BackwardstoStackJunction = drive.trajectoryBuilder(ForwardtoAlignwithStack.end().plus(new Pose2d(0, 0, Math.toRadians(-90))), false
+            ARM.setPosition(.855);
+            LiftUpForTime(1,.25);
+            INTAKE.setPosition(.8);
+            sleep(300);
+            LiftUpForTime(-1, 2.5);
+            drive.turn(Math.toRadians(90));
+            Trajectory BackwardstoStackJunction = drive.trajectoryBuilder(ForwardtoAlignwithStack.end().plus(new Pose2d(0, 0, Math.toRadians(90))), false)
                     .back(29)
                     .build();
             drive.followTrajectory(BackwardstoStackJunction);
@@ -104,9 +114,11 @@ public class AutoRedLeft extends LinearOpMode{
                     .strafeRight(3)
                     .build();
             drive.followTrajectory(StrafeRightoAlignHighJunction);
-            //swing arm back right
-            //lift lidt
-            //drop lidt
+            //Score on High Junction
+           ARM.setPosition(.155);
+           LiftUpForTime(1, .5);
+           INTAKE.setPosition(.25);
+
             //drop cone
             //lift up
             //park in signal zone
@@ -134,18 +146,111 @@ public class AutoRedLeft extends LinearOpMode{
                 drive.followTrajectory(Green);
 
 
-
+  }
+    }
+        private void stopEverything() {
+            LEFTFRONT.setPower(0);
+            RIGHTFRONT.setPower(0);
+            LEFTBACK.setPower(0);
+            RIGHTBACK.setPower(0);
         }
+
+        private void LiftUpForTime (double power, double time){
+            runtime.reset();
+            while (runtime.seconds() <= time) {
+                telemetry.addData("lift", "function");
+                telemetry.update();
+                LIFT.setPower(power);
+            }
+            LIFT.setPower(0);
+        }
+
+        private void ForwardForDistance(double power, double revolutions) {
+            int denc = (int)Math.round(revolutions * encRotation);
+
+            RIGHTFRONT.setDirection(DcMotorSimple.Direction.FORWARD);
+            LEFTFRONT.setDirection(DcMotorSimple.Direction.REVERSE);
+            RIGHTBACK.setDirection(DcMotorSimple.Direction.FORWARD);
+            LEFTBACK.setDirection(DcMotorSimple.Direction.REVERSE);
+
+            RIGHTFRONT.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            LEFTFRONT.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            RIGHTBACK.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            LEFTBACK.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+            RIGHTFRONT.setTargetPosition(denc);
+            LEFTBACK.setTargetPosition(denc);
+            RIGHTBACK.setTargetPosition(denc);
+            LEFTFRONT.setTargetPosition(denc);
+
+            LEFTBACK.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            RIGHTFRONT.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            LEFTFRONT.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            RIGHTBACK.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+            RIGHTFRONT.setPower(power);
+            LEFTFRONT.setPower(power);
+            RIGHTBACK.setPower(power);
+            LEFTBACK.setPower(power);
+
+            while (opModeIsActive() && LEFTBACK.isBusy() && LEFTFRONT.isBusy() && RIGHTBACK.isBusy() && RIGHTFRONT.isBusy())   //leftMotor.getCurrentPosition() < leftMotor.getTargetPosition())
+            {
+                idle();
+            }
+
+            stopEverything();
+        }
+
+        private void CrabForDistance (double power, double revolutions) {
+            int denc = (int)Math.round(revolutions * encRotation);
+
+            RIGHTFRONT.setDirection(DcMotorSimple.Direction.FORWARD);
+            LEFTFRONT.setDirection(DcMotorSimple.Direction.FORWARD);
+            RIGHTBACK.setDirection(DcMotorSimple.Direction.REVERSE);
+            LEFTBACK.setDirection(DcMotorSimple.Direction.REVERSE);
+
+            RIGHTFRONT.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            LEFTFRONT.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            RIGHTBACK.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            LEFTBACK.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+            RIGHTFRONT.setTargetPosition(denc);
+            LEFTBACK.setTargetPosition(denc);
+            RIGHTBACK.setTargetPosition(denc);
+            LEFTFRONT.setTargetPosition(denc);
+
+            LEFTBACK.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            RIGHTFRONT.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            LEFTFRONT.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            RIGHTBACK.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+            telemetry.addData("Mode", "running");
+            telemetry.update();
+
+            RIGHTFRONT.setPower(power);
+            LEFTFRONT.setPower(power);
+            RIGHTBACK.setPower(power);
+            LEFTBACK.setPower(power);
+
+            while (opModeIsActive() && LEFTBACK.isBusy() && LEFTFRONT.isBusy() && RIGHTBACK.isBusy() && RIGHTFRONT.isBusy())   //leftMotor.getCurrentPosition() < leftMotor.getTargetPosition())
+            {
+                idle();
+            }
+
+            stopEverything();
+        }
+
+        private void resetEncoders() {
+            LEFTFRONT.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            RIGHTFRONT.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            LEFTBACK.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            RIGHTBACK.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        }
+
+
     }
 
-    private void stopEverything() {
-        LEFTFRONT.setPower(0);
-        RIGHTFRONT.setPower(0);
-        LEFTBACK.setPower(0);
-        RIGHTBACK.setPower(0);
-    }
-
-    private void LiftUpForTime(double power, double time){
+    private void LiftUpForTime(int i, double v) {
         runtime.reset();
         while (runtime.seconds() <= time) {
             telemetry.addData("lift", "function");
@@ -154,123 +259,4 @@ public class AutoRedLeft extends LinearOpMode{
         }
         LIFT.setPower(0);
     }
-
-    private void ForwardForDistance(double power, double revolutions) {
-        int denc = (int)Math.round(revolutions * encRotation);
-
-        RIGHTFRONT.setDirection(DcMotorSimple.Direction.FORWARD);
-        LEFTFRONT.setDirection(DcMotorSimple.Direction.REVERSE);
-        RIGHTBACK.setDirection(DcMotorSimple.Direction.FORWARD);
-        LEFTBACK.setDirection(DcMotorSimple.Direction.REVERSE);
-
-        RIGHTFRONT.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        LEFTFRONT.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        RIGHTBACK.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        LEFTBACK.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-        RIGHTFRONT.setTargetPosition(denc);
-        LEFTBACK.setTargetPosition(denc);
-        RIGHTBACK.setTargetPosition(denc);
-        LEFTFRONT.setTargetPosition(denc);
-
-        LEFTBACK.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        RIGHTFRONT.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        LEFTFRONT.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        RIGHTBACK.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        RIGHTFRONT.setPower(power);
-        LEFTFRONT.setPower(power);
-        RIGHTBACK.setPower(power);
-        LEFTBACK.setPower(power);
-
-        while (opModeIsActive() && LEFTBACK.isBusy() && LEFTFRONT.isBusy() && RIGHTBACK.isBusy() && RIGHTFRONT.isBusy())   //leftMotor.getCurrentPosition() < leftMotor.getTargetPosition())
-        {
-            idle();
-        }
-
-        stopEverything();
     }
-
-    private void TurnForDistance(double power, double revolutions) {
-        int denc = (int)Math.round(revolutions * encRotation);
-
-        RIGHTFRONT.setDirection(DcMotorSimple.Direction.REVERSE);
-        LEFTFRONT.setDirection(DcMotorSimple.Direction.REVERSE);
-        RIGHTBACK.setDirection(DcMotorSimple.Direction.REVERSE);
-        LEFTBACK.setDirection(DcMotorSimple.Direction.REVERSE);
-
-        RIGHTFRONT.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        LEFTFRONT.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        RIGHTBACK.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        LEFTBACK.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-        RIGHTFRONT.setTargetPosition(denc);
-        LEFTBACK.setTargetPosition(denc);
-        RIGHTBACK.setTargetPosition(denc);
-        LEFTFRONT.setTargetPosition(denc);
-
-        LEFTBACK.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        RIGHTFRONT.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        LEFTFRONT.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        RIGHTBACK.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        telemetry.addData("Mode", "running");
-        telemetry.update();
-
-        RIGHTFRONT.setPower(power);
-        LEFTFRONT.setPower(power);
-        RIGHTBACK.setPower(power);
-        LEFTBACK.setPower(power);
-        while (opModeIsActive() && LEFTBACK.isBusy() && LEFTFRONT.isBusy() && RIGHTBACK.isBusy() && RIGHTFRONT.isBusy())   //leftMotor.getCurrentPosition() < leftMotor.getTargetPosition())
-        {
-            idle();
-        }
-        stopEverything();
-    }
-
-    private void CrabForDistance(double power, double revolutions) {
-        int denc = (int)Math.round(revolutions * encRotation);
-
-        RIGHTFRONT.setDirection(DcMotorSimple.Direction.FORWARD);
-        LEFTFRONT.setDirection(DcMotorSimple.Direction.FORWARD);
-        RIGHTBACK.setDirection(DcMotorSimple.Direction.REVERSE);
-        LEFTBACK.setDirection(DcMotorSimple.Direction.REVERSE);
-
-        RIGHTFRONT.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        LEFTFRONT.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        RIGHTBACK.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        LEFTBACK.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-        RIGHTFRONT.setTargetPosition(denc);
-        LEFTBACK.setTargetPosition(denc);
-        RIGHTBACK.setTargetPosition(denc);
-        LEFTFRONT.setTargetPosition(denc);
-
-        LEFTBACK.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        RIGHTFRONT.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        LEFTFRONT.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        RIGHTBACK.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        telemetry.addData("Mode", "running");
-        telemetry.update();
-
-        RIGHTFRONT.setPower(power);
-        LEFTFRONT.setPower(power);
-        RIGHTBACK.setPower(power);
-        LEFTBACK.setPower(power);
-
-        while (opModeIsActive() && LEFTBACK.isBusy() && LEFTFRONT.isBusy() && RIGHTBACK.isBusy() && RIGHTFRONT.isBusy())   //leftMotor.getCurrentPosition() < leftMotor.getTargetPosition())
-        {
-            idle();
-        }
-
-        stopEverything();
-    }
-
-    private void resetEncoders() {
-        LEFTFRONT.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        RIGHTFRONT.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        LEFTBACK.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        RIGHTBACK.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-    }
-
