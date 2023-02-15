@@ -54,14 +54,17 @@ public class AutoRedLeft extends LinearOpMode{
         if (opModeIsActive()) {
             //Sensing Signal Cone
             Trajectory StrafetoSignalCone = drive.trajectoryBuilder(new Pose2d())
-                    .forward(19)
+                    .forward(16)
                     .build();
             drive.followTrajectory(StrafetoSignalCone);
             Trajectory StrafetoSenseSignalCone = drive.trajectoryBuilder(StrafetoSignalCone.end())
-                    //TEST THE STRAFING VALUE//
-                    .strafeRight(2.5)
+                    .strafeRight(7)
                     .build();
             drive.followTrajectory(StrafetoSenseSignalCone);
+            Trajectory StrafeAwaySignalCone = drive.trajectoryBuilder(StrafetoSignalCone.end())
+                    .strafeLeft(7)
+                    .build();
+            drive.followTrajectory(StrafeAwaySignalCone);
             while (COLORSENSOR.red() == 0 && opModeIsActive()){
                 // crab to the righct
                 telemetry.addData("Red", COLORSENSOR.red());
@@ -74,7 +77,7 @@ public class AutoRedLeft extends LinearOpMode{
             double greenVal = COLORSENSOR.green();
             double blueVal = COLORSENSOR.blue();
             //Forward to Medium Junction
-            Trajectory ForwardtoMedJunction = drive.trajectoryBuilder(StrafetoSenseSignalCone.end())
+            Trajectory ForwardtoMedJunction = drive.trajectoryBuilder(StrafeAwaySignalCone.end())
                     .forward(24)
                     .build();
             drive.followTrajectory(ForwardtoMedJunction);
