@@ -102,8 +102,8 @@ public class AutoRedLeft extends LinearOpMode{
             INTAKE.setPosition(.8);
             sleep(300);
             LiftUpForTime(-1, 2.5);
-
-            Trajectory BackwardstoStackJunction = drive.trajectoryBuilder(ForwardtoAlignwithStack.end().plus(new Pose2d(0, 0, Math.toRadians(-90))), false)
+            drive.turn(Math.toRadians(90));
+            Trajectory BackwardstoStackJunction = drive.trajectoryBuilder(ForwardtoAlignwithStack.end().plus(new Pose2d(0, 0, Math.toRadians(90))), false)
                     .back(29)
                     .build();
             drive.followTrajectory(BackwardstoStackJunction);
@@ -198,43 +198,6 @@ public class AutoRedLeft extends LinearOpMode{
             stopEverything();
         }
 
-        private void TurnForDistance(double power, double revolutions) {
-            int denc = (int)Math.round(revolutions * encRotation);
-
-            RIGHTFRONT.setDirection(DcMotorSimple.Direction.REVERSE);
-            LEFTFRONT.setDirection(DcMotorSimple.Direction.REVERSE);
-            RIGHTBACK.setDirection(DcMotorSimple.Direction.REVERSE);
-            LEFTBACK.setDirection(DcMotorSimple.Direction.REVERSE);
-
-            RIGHTFRONT.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            LEFTFRONT.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            RIGHTBACK.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            LEFTBACK.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-            RIGHTFRONT.setTargetPosition(denc);
-            LEFTBACK.setTargetPosition(denc);
-            RIGHTBACK.setTargetPosition(denc);
-            LEFTFRONT.setTargetPosition(denc);
-
-            LEFTBACK.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            RIGHTFRONT.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            LEFTFRONT.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            RIGHTBACK.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-            telemetry.addData("Mode", "running");
-            telemetry.update();
-
-            RIGHTFRONT.setPower(power);
-            LEFTFRONT.setPower(power);
-            RIGHTBACK.setPower(power);
-            LEFTBACK.setPower(power);
-            while (opModeIsActive() && LEFTBACK.isBusy() && LEFTFRONT.isBusy() && RIGHTBACK.isBusy() && RIGHTFRONT.isBusy())   //leftMotor.getCurrentPosition() < leftMotor.getTargetPosition())
-            {
-                idle();
-            }
-            stopEverything();
-        }
-
         private void CrabForDistance (double power, double revolutions) {
             int denc = (int)Math.round(revolutions * encRotation);
 
@@ -282,4 +245,15 @@ public class AutoRedLeft extends LinearOpMode{
         }
 
 
+    }
+
+    private void LiftUpForTime(int i, double v) {
+        runtime.reset();
+        while (runtime.seconds() <= time) {
+            telemetry.addData("lift", "function");
+            telemetry.update();
+            LIFT.setPower(power);
+        }
+        LIFT.setPower(0);
+    }
     }
