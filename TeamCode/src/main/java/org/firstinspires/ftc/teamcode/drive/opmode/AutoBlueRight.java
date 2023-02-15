@@ -53,6 +53,8 @@ public class AutoBlueRight extends LinearOpMode{
         waitForStart();
 
         if (opModeIsActive()) {
+            // raise the lift
+            LiftUpForTime(-0.7, 1.5);
             Trajectory StrafetoSignalCone = drive.trajectoryBuilder(new Pose2d())
                     .forward(15)
                     .build();
@@ -78,30 +80,31 @@ public class AutoBlueRight extends LinearOpMode{
                     .strafeLeft(7)
                     .build();
             drive.followTrajectory(StrafeAwayfromSignalCone);
+
             //Forward to Medium Junction
             Trajectory ForwardtoMedJunction = drive.trajectoryBuilder(StrafetoSenseSignalCone.end())
-                    .forward(7)
+                    .forward(25)
                     .build();
             drive.followTrajectory(ForwardtoMedJunction);
-            // TEST THE TIME VALUE //
-            LiftUpForTime(-0.7,2.5);
-            Trajectory StrafeRightoScoreMedJunction = drive.trajectoryBuilder(ForwardtoMedJunction.end())
-                    .strafeRight(10)
+            // strafe right toward junction
+            Trajectory StrafeRightTowardJunction = drive.trajectoryBuilder(StrafetoSignalCone.end())
+                    //TEST THE STRAFING VALUE//
+                    .strafeLeft(2)
                     .build();
-            drive.followTrajectory(StrafeRightoScoreMedJunction);
-            //Lower Lift
-            // TEST THE TIME VALUE //
-            LiftUpForTime(0.7, 0.5);
+            drive.followTrajectory(StrafeRightTowardJunction);
+
             // Cone Drop
+            INTAKE.setPosition(0.88);
             //Raise Lift
             // TEST THE TIME VALUE //
             LiftUpForTime(-0.7,1);
-            Trajectory StrafeLefttoRecenter = drive.trajectoryBuilder(ForwardtoMedJunction.end())
-                    .strafeLeft(10)
-                    .build();
-            drive.followTrajectory(StrafeLefttoRecenter);
-//            Trajectory ForwardtoAlignwithStack = drive.trajectoryBuilder(ForwardtoMedJunction.end())
-//                    .forward(15)
+            LIFT.setPower(0);
+//            Trajectory StrafeLefttoRecenter = drive.trajectoryBuilder(ForwardtoMedJunction.end())
+//                    .strafeLeft(10)
+//                    .build();
+//            drive.followTrajectory(StrafeLefttoRecenter);
+////            Trajectory ForwardtoAlignwithStack = drive.trajectoryBuilder(ForwardtoMedJunction.end())
+////                    .forward(15)
 //                    .build();
 //            drive.followTrajectory(ForwardtoAlignwithStack);
 //            Trajectory StrafetoConeStack = drive.trajectoryBuilder(ForwardtoMedJunction.end())
