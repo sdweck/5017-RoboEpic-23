@@ -54,12 +54,12 @@ public class AutoBlueRight extends LinearOpMode{
 
         if (opModeIsActive()) {
             Trajectory StrafetoSignalCone = drive.trajectoryBuilder(new Pose2d())
-                    .forward(21)
+                    .forward(15)
                     .build();
             drive.followTrajectory(StrafetoSignalCone);
             Trajectory StrafetoSenseSignalCone = drive.trajectoryBuilder(StrafetoSignalCone.end())
                     //TEST THE STRAFING VALUE//
-                    .strafeRight(2.5)
+                    .strafeRight(7)
                     .build();
             drive.followTrajectory(StrafetoSenseSignalCone);
             while (COLORSENSOR.red() == 0 && opModeIsActive()){
@@ -75,86 +75,86 @@ public class AutoBlueRight extends LinearOpMode{
             double blueVal = COLORSENSOR.blue();
             Trajectory StrafeAwayfromSignalCone = drive.trajectoryBuilder(StrafetoSignalCone.end())
                     //TEST THE STRAFING VALUE//
-                    .strafeLeft(2.5)
+                    .strafeLeft(7)
                     .build();
             drive.followTrajectory(StrafeAwayfromSignalCone);
             //Forward to Medium Junction
             Trajectory ForwardtoMedJunction = drive.trajectoryBuilder(StrafetoSenseSignalCone.end())
-                    .forward(27)
+                    .forward(7)
                     .build();
             drive.followTrajectory(ForwardtoMedJunction);
             // TEST THE TIME VALUE //
-            LiftUpForTime(0.7,2.5);
+            LiftUpForTime(-0.7,2.5);
             Trajectory StrafeRightoScoreMedJunction = drive.trajectoryBuilder(ForwardtoMedJunction.end())
-                    .strafeRight(3)
+                    .strafeRight(10)
                     .build();
             drive.followTrajectory(StrafeRightoScoreMedJunction);
             //Lower Lift
             // TEST THE TIME VALUE //
-            LiftUpForTime(-0.7, 0.5);
+            LiftUpForTime(0.7, 0.5);
             // Cone Drop
             //Raise Lift
             // TEST THE TIME VALUE //
-            LiftUpForTime(0.7,1);
+            LiftUpForTime(-0.7,1);
             Trajectory StrafeLefttoRecenter = drive.trajectoryBuilder(ForwardtoMedJunction.end())
-                    .strafeLeft(3)
+                    .strafeLeft(10)
                     .build();
             drive.followTrajectory(StrafeLefttoRecenter);
-            Trajectory ForwardtoAlignwithStack = drive.trajectoryBuilder(ForwardtoMedJunction.end())
-                    .forward(15)
-                    .build();
-            drive.followTrajectory(ForwardtoAlignwithStack);
-            Trajectory StrafetoConeStack = drive.trajectoryBuilder(ForwardtoMedJunction.end())
-                    .strafeRight(23)
-                    .build();
-            drive.followTrajectory(StrafetoConeStack);
-            Trajectory StrafeRightoAlignHighJunction = drive.trajectoryBuilder(ForwardtoMedJunction.end())
-                    .strafeRight(3)
-                    .build();
-            drive.followTrajectory(StrafeRightoAlignHighJunction);
-            //Lower Lift
-            // TEST THE TIME VALUE //
-            LiftUpForTime(-0.7, 0.5);
-            //Pick Up Cone
-            //Raise Lift
-            // TEST THE TIME VALUE //
-            LiftUpForTime(0.7, 3.5);
-            //Swimg Arm Forward
-            Trajectory StrafeLefttoHighJunction = drive.trajectoryBuilder(ForwardtoMedJunction.end())
-                    .strafeLeft(36)
-                    .build();
-            drive.followTrajectory(StrafeLefttoHighJunction);
-            Trajectory ForwardtoScoreHighJunction = drive.trajectoryBuilder(ForwardtoMedJunction.end())
-                    .forward(5)
-                    .build();
-            drive.followTrajectory(ForwardtoScoreHighJunction);
-            Trajectory BacktoPark = drive.trajectoryBuilder(ForwardtoMedJunction.end())
-                    .back(2)
-                    .build();
-            drive.followTrajectory(BacktoPark);
-            //Lower Lift
-            LiftUpForTime(-0.7,1);
-            //Drop Cone
-
-            if (redVal > greenVal && redVal > blueVal) {
-                Trajectory Red = drive.trajectoryBuilder(BacktoPark.end())
-                        .strafeRight(15)
-                        .build();
-                drive.followTrajectory(Red);
-
-
-
-            }
-
-
-            else if (greenVal > redVal && greenVal > blueVal) {
-                Trajectory Green = drive.trajectoryBuilder(BacktoPark.end())
-                        .strafeLeft(15)
-                        .build();
-                drive.followTrajectory(Green);
-
-
-            }
+//            Trajectory ForwardtoAlignwithStack = drive.trajectoryBuilder(ForwardtoMedJunction.end())
+//                    .forward(15)
+//                    .build();
+//            drive.followTrajectory(ForwardtoAlignwithStack);
+//            Trajectory StrafetoConeStack = drive.trajectoryBuilder(ForwardtoMedJunction.end())
+//                    .strafeRight(23)
+//                    .build();
+//            drive.followTrajectory(StrafetoConeStack);
+//            Trajectory StrafeRightoAlignHighJunction = drive.trajectoryBuilder(ForwardtoMedJunction.end())
+//                    .strafeRight(3)
+//                    .build();
+//            drive.followTrajectory(StrafeRightoAlignHighJunction);
+//            //Lower Lift
+//            // TEST THE TIME VALUE //
+//            LiftUpForTime(-0.7, 0.5);
+//            //Pick Up Cone
+//            //Raise Lift
+//            // TEST THE TIME VALUE //
+//            LiftUpForTime(0.7, 3.5);
+//            //Swimg Arm Forward
+//            Trajectory StrafeLefttoHighJunction = drive.trajectoryBuilder(ForwardtoMedJunction.end())
+//                    .strafeLeft(36)
+//                    .build();
+//            drive.followTrajectory(StrafeLefttoHighJunction);
+//            Trajectory ForwardtoScoreHighJunction = drive.trajectoryBuilder(ForwardtoMedJunction.end())
+//                    .forward(5)
+//                    .build();
+//            drive.followTrajectory(ForwardtoScoreHighJunction);
+//            Trajectory BacktoPark = drive.trajectoryBuilder(ForwardtoMedJunction.end())
+//                    .back(2)
+//                    .build();
+//            drive.followTrajectory(BacktoPark);
+//            //Lower Lift
+//            LiftUpForTime(-0.7,1);
+//            //Drop Cone
+//
+//            if (redVal > greenVal && redVal > blueVal) {
+//                Trajectory Red = drive.trajectoryBuilder(BacktoPark.end())
+//                        .strafeRight(15)
+//                        .build();
+//                drive.followTrajectory(Red);
+//
+//
+//
+//            }
+//
+//
+//            else if (greenVal > redVal && greenVal > blueVal) {
+//                Trajectory Green = drive.trajectoryBuilder(BacktoPark.end())
+//                        .strafeLeft(15)
+//                        .build();
+//                drive.followTrajectory(Green);
+//
+//
+//            }
 
 
         }
