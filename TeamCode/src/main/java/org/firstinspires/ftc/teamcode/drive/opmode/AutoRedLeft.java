@@ -89,14 +89,15 @@ public class AutoRedLeft extends LinearOpMode{
                     .build();
             drive.followTrajectory(StrafeLefttoRecenter);
             Trajectory ForwardtoAlignwithStack = drive.trajectoryBuilder(ForwardtoMedJunction.end())
-                    .forward(29)
+                    .forward(15)
                     .build();
             drive.followTrajectory(ForwardtoAlignwithStack);
+            drive.turn(Math.toRadians(90));
             //Lower Lift
             //Pick Up Stack
             //Lift Lift
-            Trajectory BackwardstoStackJunction = drive.trajectoryBuilder(ForwardtoMedJunction.end())
-                    .back(36)
+            Trajectory BackwardstoStackJunction = drive.trajectoryBuilder(ForwardtoAlignwithStack.end().plus(new Pose2d(0, 0, Math.toRadians(-90))), false
+                    .back(29)
                     .build();
             drive.followTrajectory(BackwardstoStackJunction);
             Trajectory StrafeRightoAlignHighJunction = drive.trajectoryBuilder(ForwardtoMedJunction.end())
@@ -272,6 +273,4 @@ public class AutoRedLeft extends LinearOpMode{
         LEFTBACK.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         RIGHTBACK.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
-
-}
 
