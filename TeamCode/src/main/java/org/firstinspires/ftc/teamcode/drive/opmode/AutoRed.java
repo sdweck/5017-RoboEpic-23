@@ -78,7 +78,7 @@ public class AutoRedRight extends LinearOpMode{
                     .build();
             drive.followTrajectory(StrafeAwayfromSignalCone);
             //Forward to Medium Junction
-            Trajectory ForwardtoMedJunction = drive.followTrajectory(StrafetoSenseSignalCone.end())
+            Trajectory ForwardtoMedJunction = drive.trajectoryBuilder(StrafetoSenseSignalCone.end())
                     .forward(27)
                     .build();
             drive.followTrajectory(ForwardtoMedJunction);
