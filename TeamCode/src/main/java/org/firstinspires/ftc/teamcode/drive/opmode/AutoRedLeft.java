@@ -74,7 +74,7 @@ public class AutoRedLeft extends LinearOpMode{
             double greenVal = COLORSENSOR.green();
             double blueVal = COLORSENSOR.blue();
             //Forward to Medium Junction
-            Trajectory ForwardtoMedJunction = drive.trajectoryBuilder(StrafetoSenseSignalCone.end())
+            Trajectory ForwardtoMedJunction = drive.followTrajectory(StrafetoSenseSignalCone.end())
                     .forward(24)
                     .build();
             drive.followTrajectory(ForwardtoMedJunction);
@@ -96,7 +96,7 @@ public class AutoRedLeft extends LinearOpMode{
             //Lower Lift
             //Pick Up Stack
             //Lift Lift
-            Trajectory BackwardstoStackJunction = drive.trajectoryBuilder(ForwardtoAlignwithStack.end().plus(new Pose2d(0, 0, Math.toRadians(-90))), false)
+            Trajectory BackwardstoStackJunction = drive.trajectoryBuilder(ForwardtoAlignwithStack.end().plus(new Pose2d(0, 0, Math.toRadians(-90))), false
                     .back(29)
                     .build();
             drive.followTrajectory(BackwardstoStackJunction);
