@@ -79,18 +79,23 @@ public class AutoBlueRight extends LinearOpMode{
                     .build();
             drive.followTrajectory(StrafeAwayfromSignalCone);
             //Forward to Medium Junction
-            Trajectory ForwardtoMedJunction = drive.followTrajectory(StrafetoSenseSignalCone.end())
+            Trajectory ForwardtoMedJunction = drive.trajectoryBuilder(StrafetoSenseSignalCone.end())
                     .forward(27)
                     .build();
             drive.followTrajectory(ForwardtoMedJunction);
-            //Lift up
+            // TEST THE TIME VALUE //
+            LiftUpForTime(0.7,2.5);
             Trajectory StrafeRightoScoreMedJunction = drive.trajectoryBuilder(ForwardtoMedJunction.end())
                     .strafeRight(3)
                     .build();
             drive.followTrajectory(StrafeRightoScoreMedJunction);
             //Lower Lift
+            // TEST THE TIME VALUE //
+            LiftUpForTime(-0.7, 0.5);
             // Cone Drop
             //Raise Lift
+            // TEST THE TIME VALUE //
+            LiftUpForTime(0.7,1);
             Trajectory StrafeLefttoRecenter = drive.trajectoryBuilder(ForwardtoMedJunction.end())
                     .strafeLeft(3)
                     .build();
@@ -108,8 +113,12 @@ public class AutoBlueRight extends LinearOpMode{
                     .build();
             drive.followTrajectory(StrafeRightoAlignHighJunction);
             //Lower Lift
+            // TEST THE TIME VALUE //
+            LiftUpForTime(-0.7, 0.5);
             //Pick Up Cone
             //Raise Lift
+            // TEST THE TIME VALUE //
+            LiftUpForTime(0.7, 3.5);
             //Swimg Arm Forward
             Trajectory StrafeLefttoHighJunction = drive.trajectoryBuilder(ForwardtoMedJunction.end())
                     .strafeLeft(36)
@@ -124,6 +133,7 @@ public class AutoBlueRight extends LinearOpMode{
                     .build();
             drive.followTrajectory(BacktoPark);
             //Lower Lift
+            LiftUpForTime(-0.7,1);
             //Drop Cone
 
             if (redVal > greenVal && redVal > blueVal) {
