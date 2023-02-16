@@ -77,12 +77,6 @@ public class AutoBlueRight extends LinearOpMode{
             double greenVal = COLORSENSOR.green();
             double blueVal = COLORSENSOR.blue();
 
-            telemetry.addData("Red", redVal);
-            telemetry.addData("Green", greenVal);
-            telemetry.addData("Blue", blueVal);
-            telemetry.update();
-            sleep(3000);
-
             Trajectory StrafeAwayfromSignalCone = drive.trajectoryBuilder(StrafetoSignalCone.end())
                     //TEST THE STRAFING VALUE//
                     .strafeLeft(7)
