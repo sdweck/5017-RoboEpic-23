@@ -67,7 +67,7 @@ public class AutoRedLeft extends LinearOpMode {
                 telemetry.addData("Red", COLORSENSOR.red());
                 telemetry.addData("Green", COLORSENSOR.green());
                 telemetry.addData("Blue", COLORSENSOR.blue());
-                telemetry.update();*/
+                telemetry.update();
             }
 
             double redVal = COLORSENSOR.red();
