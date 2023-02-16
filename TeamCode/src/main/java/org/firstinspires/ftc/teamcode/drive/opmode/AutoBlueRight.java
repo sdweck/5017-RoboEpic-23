@@ -99,14 +99,23 @@ public class AutoBlueRight extends LinearOpMode{
             LiftUpForTime(0.7, 0.5);
             INTAKE.setPosition(0.25);
             sleep(2000);
-//            //Raise Lift
-//            // TEST THE TIME VALUE //
-//            LiftUpForTime(-0.7,1);
-//            LIFT.setPower(0);
-//            Trajectory StrafeLefttoRecenter = drive.trajectoryBuilder(ForwardtoMedJunction.end())
-//                    .strafeLeft(10)
-//                    .build();
-//            drive.followTrajectory(StrafeLefttoRecenter);
+
+            // left to recenter
+            Trajectory StrafeLefttoRecenter = drive.trajectoryBuilder(ForwardtoMedJunction.end())
+                    .strafeLeft(7)
+                    .build();
+            drive.followTrajectory(StrafeLefttoRecenter);
+
+            // backwords to get to signal row 1
+            Trajectory BackToGetToSignalRow = drive.trajectoryBuilder(ForwardtoMedJunction.end())
+                    .back(14)
+                    .build();
+            drive.followTrajectory(BackToGetToSignalRow);
+
+            // swing arm back
+            ARM.setPosition(0.83);
+            sleep(2000);
+
 ////            Trajectory ForwardtoAlignwithStack = drive.trajectoryBuilder(ForwardtoMedJunction.end())
 ////                    .forward(15)
 //                    .build();
@@ -145,10 +154,10 @@ public class AutoBlueRight extends LinearOpMode{
 //
             // if red go to signal zone 1
             if (redVal > greenVal && redVal > blueVal) {
-//                Trajectory Red = drive.trajectoryBuilder(BacktoPark.end())
-//                        .strafeRight(15)
-//                        .build();
-//                drive.followTrajectory(Red);
+                Trajectory Red = drive.trajectoryBuilder(ForwardtoMedJunction.end())
+                        .strafeLeft(35)
+                        .build();
+                drive.followTrajectory(Red);
                 telemetry.addData("red", "signal");
                 telemetry.update();
                 sleep(3000);
@@ -170,10 +179,10 @@ public class AutoBlueRight extends LinearOpMode{
             }
             // if green go to signal zone 3
             else if (greenVal > redVal && greenVal > blueVal) {
-//                Trajectory Green = drive.trajectoryBuilder(BacktoPark.end())
-//                        .strafeLeft(15)
-//                        .build();
-//                drive.followTrajectory(Green);
+                Trajectory Green = drive.trajectoryBuilder(ForwardtoMedJunction.end())
+                        .strafeRight(35)
+                        .build();
+                drive.followTrajectory(Green);
                 telemetry.addData("green", "signal");
                 telemetry.update();
                 sleep(3000);
