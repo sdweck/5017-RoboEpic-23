@@ -1,23 +1,22 @@
 package org.firstinspires.ftc.teamcode.drive.opmode;
-
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
-
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
 //import java.awt.
 
 @Config
-@Autonomous(name = "AutoBlueLeft", group = "drive")
-public class AutoBlueLeft extends LinearOpMode{
+@Autonomous(name = "AutoRedLeftCAMERA", group = "drive")
+public class AutoRedLeftCAMERA extends LinearOpMode {
 
     // Instance variables corresponding to our various motors/servos.
     private DcMotor LEFTBACK; //2:0
@@ -51,12 +50,11 @@ public class AutoBlueLeft extends LinearOpMode{
                 SampleMecanumDrive(hardwareMap);
         // Wait for the game to start (driver presses PLAY)y77
         waitForStart();
-
         if (opModeIsActive()) {
+            //Sensing Signal Cone
             LiftUpForTime(-1, 4.0);
-            LIFT.setPower(0);
             Trajectory StrafetoSignalCone = drive.trajectoryBuilder(new Pose2d())
-                    .forward(17)
+                    .forward(16)
                     .build();
             drive.followTrajectory(StrafetoSignalCone);
             Trajectory StrafetoSenseSignalCone = drive.trajectoryBuilder(StrafetoSignalCone.end())
@@ -64,81 +62,59 @@ public class AutoBlueLeft extends LinearOpMode{
                     .strafeRight(7)
                     .build();
             drive.followTrajectory(StrafetoSenseSignalCone);
-
-            while (COLORSENSOR.red() == 0 && opModeIsActive()) {
+            /*while (COLORSENSOR.red() == 0 && opModeIsActive()) {
                 // crab to the righct
                 telemetry.addData("Red", COLORSENSOR.red());
                 telemetry.addData("Green", COLORSENSOR.green());
                 telemetry.addData("Blue", COLORSENSOR.blue());
-                telemetry.update();
-            }
+                telemetry.update();*/
+            // }
+
             double redVal = COLORSENSOR.red();
             double greenVal = COLORSENSOR.green();
             double blueVal = COLORSENSOR.blue();
-
-            Trajectory StrafetoRecenterFromSignalCone = drive.trajectoryBuilder(StrafetoSignalCone.end())
+            Trajectory StrafetoRecenterFromSignalCone = drive.trajectoryBuilder(StrafetoSenseSignalCone.end())
                     //TEST THE STRAFING VALUE//
                     .strafeLeft(7)
                     .build();
             drive.followTrajectory(StrafetoRecenterFromSignalCone);
             //Forward to Medium Junction
-            Trajectory ForwardtoMedJunction = drive.trajectoryBuilder(StrafetoSenseSignalCone.end())
-                    .forward(22)
+            Trajectory ForwardtoMedJunction = drive.trajectoryBuilder(StrafetoRecenterFromSignalCone.end())
+                    .forward(23)
                     .build();
             drive.followTrajectory(ForwardtoMedJunction);
-            Trajectory StrafeRightTowardJunction = drive.trajectoryBuilder(StrafetoSignalCone.end())
-                    //TEST THE STRAFING VALUE//
+            Trajectory StrafeRightoScoreMedJunction = drive.trajectoryBuilder(ForwardtoMedJunction.end())
                     .strafeRight(7)
                     .build();
-            drive.followTrajectory(StrafeRightTowardJunction);
+            drive.followTrajectory(StrafeRightoScoreMedJunction);
             LiftUpForTime(.7, .5);
             INTAKE.setPosition(.25);
-            Trajectory AligntoPark = drive.trajectoryBuilder(StrafetoSignalCone.end())
+            //CONE DROP
+            Trajectory StrafeLefttoRecenter = drive.trajectoryBuilder(StrafeRightoScoreMedJunction.end())
+                    .strafeLeft(7)
+                    .build();
+            drive.followTrajectory(StrafeLefttoRecenter);
+
+            Trajectory AligntoPark = drive.trajectoryBuilder(StrafeLefttoRecenter.end())
                     //TEST THE STRAFING VALUE//
                     .back(13)
                     .build();
             drive.followTrajectory(AligntoPark);
-            //Lift up
-           /* Trajectory ForwardtoAlignwithStack = drive.trajectoryBuilder(ForwardtoMedJunction.end())
-                    .forward(13)
-                    .build();
-            drive.followTrajectory(ForwardtoAlignwithStack);*/
-            /*drive.turn(Math.toRadians(90));
+
+           /* drive.turn(Math.toRadians(90));
+            //Lower Lift
+            //Pick Up Stack
+            //Lift Lift
             Trajectory BackwardstoStackJunction = drive.trajectoryBuilder(ForwardtoAlignwithStack.end().plus(new Pose2d(0, 0, Math.toRadians(-90))), false)
                     .back(29)
                     .build();
             drive.followTrajectory(BackwardstoStackJunction);
-            ARM.setPosition(.855);
-            LiftUpForTime(1, .5);*/
-
-
-         /*ajectory StrafeRightoScoreMedJunction = drive.trajectoryBuilder(ForwardtoMedJunction.end())
-                    .strafeRight(3)
-                    .build();
-            drive.followTrajectory(StrafeRightoScoreMedJunction);
-            //CONE DROP
-            Trajectory StrafeLefttoRecenter = drive.trajectoryBuilder(ForwardtoMedJunction.end())
-                    .strafeLeft(3)
-                    .build();
-            drive.followTrajectory(StrafeLefttoRecenter);
-
-
-            //Lower Lift
-            //Pick Up Stack
-            //Lift Lift
-
             Trajectory StrafeRightoAlignHighJunction = drive.trajectoryBuilder(ForwardtoMedJunction.end())
                     .strafeRight(3)
                     .build();
             drive.followTrajectory(StrafeRightoAlignHighJunction);*/
-            //swing arm back right
-            //lift lidt
-            //drop lidt
-            //drop cone
-            //lift up
-            //park in signal zone
             if (redVal > greenVal && redVal > blueVal) {
-                Trajectory Red = drive.trajectoryBuilder(ForwardtoMedJunction.end())
+                Trajectory Red = drive.trajectoryBuilder(AligntoPark.end())
                         .strafeLeft(37)
                         .build();
                 drive.followTrajectory(Red);
@@ -150,15 +126,15 @@ public class AutoBlueLeft extends LinearOpMode{
             }
             // if blue go to zone 2 (already there no if statement)
             else if (blueVal > redVal && blueVal > greenVal) {
-                /*Trajectory Blue = drive.trajectoryBuilder(ForwardtoMedJunction.end())
+                /*Trajectory Blue = drive.trajectoryBuilder(AligntoPark.end())
                         .back(12)
                         .build();*/
-               // drive.followTrajectory(Blue);
+                // drive.followTrajectory(Blue);
                 telemetry.addData("blue", "signal");
                 telemetry.update();
                 sleep(3000);
             } else if (greenVal > redVal && greenVal > blueVal) {
-                Trajectory Green = drive.trajectoryBuilder(ForwardtoMedJunction.end())
+                Trajectory Green = drive.trajectoryBuilder(AligntoPark.end())
                         .strafeRight(35)
                         .build();
                 drive.followTrajectory(Green);
@@ -184,7 +160,7 @@ public class AutoBlueLeft extends LinearOpMode{
         RIGHTBACK.setPower(0);
     }
 
-    private void LiftUpForTime(double power, double time){
+    private void LiftUpForTime(double power, double time) {
         runtime.reset();
         while (runtime.seconds() <= time) {
             telemetry.addData("lift", "function");
@@ -195,7 +171,7 @@ public class AutoBlueLeft extends LinearOpMode{
     }
 
     private void ForwardForDistance(double power, double revolutions) {
-        int denc = (int)Math.round(revolutions * encRotation);
+        int denc = (int) Math.round(revolutions * encRotation);
 
         RIGHTFRONT.setDirection(DcMotorSimple.Direction.FORWARD);
         LEFTFRONT.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -231,7 +207,7 @@ public class AutoBlueLeft extends LinearOpMode{
     }
 
     private void TurnForDistance(double power, double revolutions) {
-        int denc = (int)Math.round(revolutions * encRotation);
+        int denc = (int) Math.round(revolutions * encRotation);
 
         RIGHTFRONT.setDirection(DcMotorSimple.Direction.REVERSE);
         LEFTFRONT.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -268,7 +244,7 @@ public class AutoBlueLeft extends LinearOpMode{
     }
 
     private void CrabForDistance(double power, double revolutions) {
-        int denc = (int)Math.round(revolutions * encRotation);
+        int denc = (int) Math.round(revolutions * encRotation);
 
         RIGHTFRONT.setDirection(DcMotorSimple.Direction.FORWARD);
         LEFTFRONT.setDirection(DcMotorSimple.Direction.FORWARD);
@@ -312,5 +288,5 @@ public class AutoBlueLeft extends LinearOpMode{
         LEFTBACK.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         RIGHTBACK.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
-
 }
+

@@ -139,7 +139,7 @@ public class AutoRed extends LinearOpMode{
 
             if (redVal > greenVal && redVal > blueVal) {
                 Trajectory Red = drive.trajectoryBuilder(BacktoPark.end())
-                        .strafeRight(15)
+                        .strafeLeft(35)
                         .build();
                 drive.followTrajectory(Red);
 
