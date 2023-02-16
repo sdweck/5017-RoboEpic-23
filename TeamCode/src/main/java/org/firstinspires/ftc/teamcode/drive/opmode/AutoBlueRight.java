@@ -54,9 +54,10 @@ public class AutoBlueRight extends LinearOpMode{
 
         if (opModeIsActive()) {
             // raise the lift
-            LiftUpForTime(-0.7, 1.5);
+            LiftUpForTime(-0.7, 3);
+            LIFT.setPower(0);
             Trajectory StrafetoSignalCone = drive.trajectoryBuilder(new Pose2d())
-                    .forward(15)
+                    .forward(17)
                     .build();
             drive.followTrajectory(StrafetoSignalCone);
             Trajectory StrafetoSenseSignalCone = drive.trajectoryBuilder(StrafetoSignalCone.end())
@@ -75,6 +76,13 @@ public class AutoBlueRight extends LinearOpMode{
             double redVal = COLORSENSOR.red();
             double greenVal = COLORSENSOR.green();
             double blueVal = COLORSENSOR.blue();
+
+            telemetry.addData("Red", redVal);
+            telemetry.addData("Green", greenVal);
+            telemetry.addData("Blue", blueVal);
+            telemetry.update();
+            sleep(3000);
+
             Trajectory StrafeAwayfromSignalCone = drive.trajectoryBuilder(StrafetoSignalCone.end())
                     //TEST THE STRAFING VALUE//
                     .strafeLeft(7)
@@ -83,22 +91,24 @@ public class AutoBlueRight extends LinearOpMode{
 
             //Forward to Medium Junction
             Trajectory ForwardtoMedJunction = drive.trajectoryBuilder(StrafetoSenseSignalCone.end())
-                    .forward(25)
+                    .forward(23)
                     .build();
             drive.followTrajectory(ForwardtoMedJunction);
             // strafe right toward junction
             Trajectory StrafeRightTowardJunction = drive.trajectoryBuilder(StrafetoSignalCone.end())
                     //TEST THE STRAFING VALUE//
-                    .strafeLeft(2)
+                    .strafeRight(5)
                     .build();
             drive.followTrajectory(StrafeRightTowardJunction);
 
             // Cone Drop
-            INTAKE.setPosition(0.88);
-            //Raise Lift
-            // TEST THE TIME VALUE //
-            LiftUpForTime(-0.7,1);
-            LIFT.setPower(0);
+            LiftUpForTime(0.7, 0.5);
+            INTAKE.setPosition(0.25);
+            sleep(2000);
+//            //Raise Lift
+//            // TEST THE TIME VALUE //
+//            LiftUpForTime(-0.7,1);
+//            LIFT.setPower(0);
 //            Trajectory StrafeLefttoRecenter = drive.trajectoryBuilder(ForwardtoMedJunction.end())
 //                    .strafeLeft(10)
 //                    .build();
@@ -139,25 +149,50 @@ public class AutoBlueRight extends LinearOpMode{
 //            LiftUpForTime(-0.7,1);
 //            //Drop Cone
 //
-//            if (redVal > greenVal && redVal > blueVal) {
+            // if red go to signal zone 1
+            if (redVal > greenVal && redVal > blueVal) {
 //                Trajectory Red = drive.trajectoryBuilder(BacktoPark.end())
 //                        .strafeRight(15)
 //                        .build();
 //                drive.followTrajectory(Red);
-//
-//
-//
-//            }
-//
-//
-//            else if (greenVal > redVal && greenVal > blueVal) {
+                telemetry.addData("red", "signal");
+                telemetry.update();
+                sleep(3000);
+
+
+            }
+
+            // if blue go to signal zone 2
+            else if (blueVal > greenVal && blueVal > redVal) {
+//                Trajectory Red = drive.trajectoryBuilder(BacktoPark.end())
+//                        .strafeRight(15)
+//                        .build();
+//                drive.followTrajectory(Red);
+                telemetry.addData("blue", "signal");
+                telemetry.update();
+                sleep(3000);
+
+
+            }
+            // if green go to signal zone 3
+            else if (greenVal > redVal && greenVal > blueVal) {
 //                Trajectory Green = drive.trajectoryBuilder(BacktoPark.end())
 //                        .strafeLeft(15)
 //                        .build();
 //                drive.followTrajectory(Green);
-//
-//
-//            }
+                telemetry.addData("green", "signal");
+                telemetry.update();
+                sleep(3000);
+            }
+
+            else{
+                telemetry.addData("no color", "sensed");
+                telemetry.addData("red: ", redVal);
+                telemetry.addData("green: ", greenVal);
+                telemetry.addData("blue: ", blueVal);
+                telemetry.update();
+                sleep(3000);
+            }
 
 
         }
