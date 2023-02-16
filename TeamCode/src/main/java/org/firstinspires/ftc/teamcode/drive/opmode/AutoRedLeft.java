@@ -53,7 +53,7 @@ public class AutoRedLeft extends LinearOpMode {
         if (opModeIsActive()) {
             //Sensing Signal Cone
             Trajectory StrafetoSignalCone = drive.trajectoryBuilder(new Pose2d())
-                    .forward(15)
+                    .forward(16)
                     .build();
             drive.followTrajectory(StrafetoSignalCone);
             Trajectory StrafetoSenseSignalCone = drive.trajectoryBuilder(StrafetoSignalCone.end())
