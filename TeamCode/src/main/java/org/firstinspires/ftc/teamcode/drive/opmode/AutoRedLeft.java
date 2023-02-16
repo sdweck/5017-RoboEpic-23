@@ -50,11 +50,10 @@ public class AutoRedLeft extends LinearOpMode {
                 SampleMecanumDrive(hardwareMap);
         // Wait for the game to start (driver presses PLAY)y77
         waitForStart();
-
         if (opModeIsActive()) {
             //Sensing Signal Cone
             Trajectory StrafetoSignalCone = drive.trajectoryBuilder(new Pose2d())
-                    .forward(15)
+                    .forward(16)
                     .build();
             drive.followTrajectory(StrafetoSignalCone);
             Trajectory StrafetoSenseSignalCone = drive.trajectoryBuilder(StrafetoSignalCone.end())
@@ -134,8 +133,6 @@ public class AutoRedLeft extends LinearOpMode {
                         .strafeRight(25)
                         .build();
                 drive.followTrajectory(Green);
-
-
             }
         }
     }

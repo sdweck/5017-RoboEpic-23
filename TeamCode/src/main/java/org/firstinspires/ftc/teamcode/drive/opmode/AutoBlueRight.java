@@ -66,7 +66,7 @@ public class AutoBlueRight extends LinearOpMode{
                     .build();
             drive.followTrajectory(StrafetoSenseSignalCone);
             while (COLORSENSOR.red() == 0 && opModeIsActive()){
-                // crab to the righct
+                // crab to the right
                 telemetry.addData("Red", COLORSENSOR.red());
                 telemetry.addData("Green", COLORSENSOR.green());
                 telemetry.addData("Blue", COLORSENSOR.blue());

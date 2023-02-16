@@ -16,7 +16,7 @@ import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
 @Config
 @Autonomous(name = "AutoRedRight", group = "drive")
-public class AutoRedRight extends LinearOpMode{
+public class AutoRed extends LinearOpMode{
 
     // Instance variables corresponding to our various motors/servos.
     private DcMotor LEFTBACK; //2:0
@@ -53,12 +53,12 @@ public class AutoRedRight extends LinearOpMode{
 
         if (opModeIsActive()) {
             Trajectory StrafetoSignalCone = drive.trajectoryBuilder(new Pose2d())
-                    .forward(19)
+                    .forward(15)
                     .build();
             drive.followTrajectory(StrafetoSignalCone);
             Trajectory StrafetoSenseSignalCone = drive.trajectoryBuilder(StrafetoSignalCone.end())
                     //TEST THE STRAFING VALUE//
-                    .strafeRight(2.5)
+                    .strafeRight(7)
                     .build();
             drive.followTrajectory(StrafetoSenseSignalCone);
             while (COLORSENSOR.red() == 0 && opModeIsActive()){
@@ -74,7 +74,7 @@ public class AutoRedRight extends LinearOpMode{
             double blueVal = COLORSENSOR.blue();
             Trajectory StrafeAwayfromSignalCone = drive.trajectoryBuilder(StrafetoSignalCone.end())
                     //TEST THE STRAFING VALUE//
-                    .strafeLeft(2.5)
+                    .strafeLeft(7)
                     .build();
             drive.followTrajectory(StrafeAwayfromSignalCone);
             //Forward to Medium Junction
@@ -83,13 +83,18 @@ public class AutoRedRight extends LinearOpMode{
                     .build();
             drive.followTrajectory(ForwardtoMedJunction);
             //Lift up
+            LiftUpForTime(-1, 2.0);
+
             Trajectory StrafeRightoScoreMedJunction = drive.trajectoryBuilder(ForwardtoMedJunction.end())
                     .strafeRight(3)
                     .build();
             drive.followTrajectory(StrafeRightoScoreMedJunction);
             //Lower Lift
+            LiftUpForTime(1, 1);
             // Cone Drop
+            INTAKE.setPosition(.25);
             //Raise Lift
+            LiftUpForTime(-1,.1);
             Trajectory StrafeLefttoRecenter = drive.trajectoryBuilder(ForwardtoMedJunction.end())
                     .strafeLeft(3)
                     .build();
@@ -107,9 +112,13 @@ public class AutoRedRight extends LinearOpMode{
                     .build();
             drive.followTrajectory(StrafeRightoAlignHighJunction);
             //Lower Lift
+            LiftUpForTime(1,.2);
             //Pick Up Cone
+            INTAKE.setPosition(0.8);
             //Raise Lift
+            LiftUpForTime(-1,2);
             //Swimg Arm Forward
+            ARM.setPosition(.155);
             Trajectory StrafeLefttoHighJunction = drive.trajectoryBuilder(ForwardtoMedJunction.end())
                     .strafeLeft(36)
                     .build();
@@ -122,8 +131,11 @@ public class AutoRedRight extends LinearOpMode{
                     .back(2)
                     .build();
             drive.followTrajectory(BacktoPark);
+
             //Lower Lift
+            LiftUpForTime(1,.2);
             //Drop Cone
+            INTAKE.setPosition(.25);
 
             if (redVal > greenVal && redVal > blueVal) {
                 Trajectory Red = drive.trajectoryBuilder(BacktoPark.end())
@@ -156,7 +168,7 @@ public class AutoRedRight extends LinearOpMode{
         RIGHTBACK.setPower(0);
     }
 
-    private void LiftUpForTime(double power, double time){
+    private void LiftUpForTime (double power, double time){
         runtime.reset();
         while (runtime.seconds() <= time) {
             telemetry.addData("lift", "function");
