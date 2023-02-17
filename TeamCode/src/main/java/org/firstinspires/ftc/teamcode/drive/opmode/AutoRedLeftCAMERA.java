@@ -80,7 +80,7 @@ public class AutoRedLeftCAMERA extends LinearOpMode{
         ARM = hardwareMap.servo.get("ARM");
         LIFT.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        // CAMERA
+        // CAMERA CODE
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         CAMERA = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "CAMERA"), cameraMonitorViewId);
         aprilTagDetectionPipeline = new AprilTagDetectionPipeline(tagsize, fx, fy, cx, cy);

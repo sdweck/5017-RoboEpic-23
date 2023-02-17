@@ -39,7 +39,7 @@ public class AutoBlueLeftCAMERA extends LinearOpMode{
     private DcMotor LIFT;
     private ElapsedTime runtime = new ElapsedTime();
 
-    //CAMERA
+    //CAMERA CODE
     OpenCvCamera CAMERA;
     AprilTagDetectionPipeline aprilTagDetectionPipeline;
 
