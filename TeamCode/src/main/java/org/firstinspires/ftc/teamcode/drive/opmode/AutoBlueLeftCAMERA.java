@@ -56,41 +56,18 @@ public class AutoBlueLeftCAMERA extends LinearOpMode{
             LiftUpForTime(-1, 4.0);
             LIFT.setPower(0);
             Trajectory StrafetoSignalCone = drive.trajectoryBuilder(new Pose2d())
-                    .forward(17)
+                    .forward(39)
                     .build();
             drive.followTrajectory(StrafetoSignalCone);
-            Trajectory StrafetoSenseSignalCone = drive.trajectoryBuilder(StrafetoSignalCone.end())
-                    //TEST THE STRAFING VALUE//
-                    .strafeRight(7)
-                    .build();
-            drive.followTrajectory(StrafetoSenseSignalCone);
 
-          /*  while (COLORSENSOR.red() == 0 && opModeIsActive()) {
-                // crab to the righct
-                telemetry.addData("Red", COLORSENSOR.red());
-                telemetry.addData("Green", COLORSENSOR.green());
-                telemetry.addData("Blue", COLORSENSOR.blue());
-                telemetry.update();
-            }*/
-            double redVal = COLORSENSOR.red();
-            double greenVal = COLORSENSOR.green();
-            double blueVal = COLORSENSOR.blue();
-
-            Trajectory StrafetoRecenterFromSignalCone = drive.trajectoryBuilder(StrafetoSignalCone.end())
-                    //TEST THE STRAFING VALUE//
-                    .strafeLeft(7)
-                    .build();
-            drive.followTrajectory(StrafetoRecenterFromSignalCone);
-            //Forward to Medium Junction
-            Trajectory ForwardtoMedJunction = drive.trajectoryBuilder(StrafetoSenseSignalCone.end())
-                    .forward(22)
-                    .build();
-            drive.followTrajectory(ForwardtoMedJunction);
             Trajectory StrafeRightTowardJunction = drive.trajectoryBuilder(StrafetoSignalCone.end())
-                    //TEST THE STRAFING VALUE//
                     .strafeRight(7)
                     .build();
             drive.followTrajectory(StrafeRightTowardJunction);
+            Trajectory StrafeAway = drive.trajectoryBuilder(StrafetoSignalCone.end())
+                    .strafeLeft(7)
+                    .build();
+            drive.followTrajectory(StrafeAway);
             LiftUpForTime(.7, .5);
             INTAKE.setPosition(.25);
             Trajectory AligntoPark = drive.trajectoryBuilder(StrafetoSignalCone.end())
@@ -98,82 +75,7 @@ public class AutoBlueLeftCAMERA extends LinearOpMode{
                     .back(13)
                     .build();
             drive.followTrajectory(AligntoPark);
-            //Lift up
-           /* Trajectory ForwardtoAlignwithStack = drive.trajectoryBuilder(ForwardtoMedJunction.end())
-                    .forward(13)
-                    .build();
-            drive.followTrajectory(ForwardtoAlignwithStack);*/
-            /*drive.turn(Math.toRadians(90));
-            Trajectory BackwardstoStackJunction = drive.trajectoryBuilder(ForwardtoAlignwithStack.end().plus(new Pose2d(0, 0, Math.toRadians(-90))), false)
-                    .back(29)
-                    .build();
-            drive.followTrajectory(BackwardstoStackJunction);
-            ARM.setPosition(.855);
-            LiftUpForTime(1, .5);*/
 
-
-         /*ajectory StrafeRightoScoreMedJunction = drive.trajectoryBuilder(ForwardtoMedJunction.end())
-                    .strafeRight(3)
-                    .build();
-            drive.followTrajectory(StrafeRightoScoreMedJunction);
-            //CONE DROP
-            Trajectory StrafeLefttoRecenter = drive.trajectoryBuilder(ForwardtoMedJunction.end())
-                    .strafeLeft(3)
-                    .build();
-            drive.followTrajectory(StrafeLefttoRecenter);
-
-
-            //Lower Lift
-            //Pick Up Stack
-            //Lift Lift
-
-            Trajectory StrafeRightoAlignHighJunction = drive.trajectoryBuilder(ForwardtoMedJunction.end())
-                    .strafeRight(3)
-                    .build();
-            drive.followTrajectory(StrafeRightoAlignHighJunction);*/
-            //swing arm back right
-            //lift lidt
-            //drop lidt
-            //drop cone
-            //lift up
-            //park in signal zone
-            if (redVal > greenVal && redVal > blueVal) {
-                Trajectory Red = drive.trajectoryBuilder(ForwardtoMedJunction.end())
-                        .strafeLeft(37)
-                        .build();
-                drive.followTrajectory(Red);
-                telemetry.addData("red", "signal");
-                telemetry.update();
-                sleep(3000);
-
-
-            }
-            // if blue go to zone 2 (already there no if statement)
-            else if (blueVal > redVal && blueVal > greenVal) {
-                /*Trajectory Blue = drive.trajectoryBuilder(ForwardtoMedJunction.end())
-                        .back(12)
-                        .build();*/
-                // drive.followTrajectory(Blue);
-                telemetry.addData("blue", "signal");
-                telemetry.update();
-                sleep(3000);
-            } else if (greenVal > redVal && greenVal > blueVal) {
-                Trajectory Green = drive.trajectoryBuilder(ForwardtoMedJunction.end())
-                        .strafeRight(35)
-                        .build();
-                drive.followTrajectory(Green);
-                telemetry.addData("green", "signal");
-                telemetry.update();
-                sleep(3000);
-            }
-            else{
-                telemetry.addData("no color", "sensed");
-                telemetry.addData("red: ", redVal);
-                telemetry.addData("green: ", greenVal);
-                telemetry.addData("blue: ", blueVal);
-                telemetry.update();
-                sleep(3000);
-            }
         }
     }
 

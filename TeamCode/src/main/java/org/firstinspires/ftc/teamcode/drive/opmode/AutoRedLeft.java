@@ -54,7 +54,7 @@ public class AutoRedLeft extends LinearOpMode {
             //Sensing Signal Cone
             LiftUpForTime(-1, 4.0);
             Trajectory StrafetoSignalCone = drive.trajectoryBuilder(new Pose2d())
-                    .forward(16)
+                    .forward(17)
                     .build();
             drive.followTrajectory(StrafetoSignalCone);
             Trajectory StrafetoSenseSignalCone = drive.trajectoryBuilder(StrafetoSignalCone.end())
@@ -73,35 +73,31 @@ public class AutoRedLeft extends LinearOpMode {
             double redVal = COLORSENSOR.red();
             double greenVal = COLORSENSOR.green();
             double blueVal = COLORSENSOR.blue();
-            Trajectory StrafetoRecenterFromSignalCone = drive.trajectoryBuilder(StrafetoSenseSignalCone.end())
+            Trajectory StrafetoRecenterFromSignalCone = drive.trajectoryBuilder(StrafetoSignalCone.end())
                     //TEST THE STRAFING VALUE//
                     .strafeLeft(7)
                     .build();
             drive.followTrajectory(StrafetoRecenterFromSignalCone);
             //Forward to Medium Junction
-            Trajectory ForwardtoMedJunction = drive.trajectoryBuilder(StrafetoRecenterFromSignalCone.end())
-                    .forward(23)
+            Trajectory ForwardtoMedJunction = drive.trajectoryBuilder(StrafetoSenseSignalCone.end())
+                    .forward(24)
                     .build();
             drive.followTrajectory(ForwardtoMedJunction);
+            //Lift up
             Trajectory StrafeRightoScoreMedJunction = drive.trajectoryBuilder(ForwardtoMedJunction.end())
-                    .strafeRight(7)
+                    .strafeRight(3)
                     .build();
             drive.followTrajectory(StrafeRightoScoreMedJunction);
-            LiftUpForTime(.7, .5);
-            INTAKE.setPosition(.25);
             //CONE DROP
-            Trajectory StrafeLefttoRecenter = drive.trajectoryBuilder(StrafeRightoScoreMedJunction.end())
-                    .strafeLeft(7)
+            Trajectory StrafeLefttoRecenter = drive.trajectoryBuilder(ForwardtoMedJunction.end())
+                    .strafeLeft(3)
                     .build();
             drive.followTrajectory(StrafeLefttoRecenter);
-
-            Trajectory AligntoPark = drive.trajectoryBuilder(StrafeLefttoRecenter.end())
-                    //TEST THE STRAFING VALUE//
-                    .back(13)
+            Trajectory ForwardtoAlignwithStack = drive.trajectoryBuilder(ForwardtoMedJunction.end())
+                    .forward(15)
                     .build();
-            drive.followTrajectory(AligntoPark);
-
-           /* drive.turn(Math.toRadians(90));
+            drive.followTrajectory(ForwardtoAlignwithStack);
+            drive.turn(Math.toRadians(90));
             //Lower Lift
             //Pick Up Stack
             //Lift Lift
@@ -112,43 +108,32 @@ public class AutoRedLeft extends LinearOpMode {
             Trajectory StrafeRightoAlignHighJunction = drive.trajectoryBuilder(ForwardtoMedJunction.end())
                     .strafeRight(3)
                     .build();
-            drive.followTrajectory(StrafeRightoAlignHighJunction);*/
+            drive.followTrajectory(StrafeRightoAlignHighJunction);
+            //swing arm back right
+            //lift lidt
+            //drop lidt
+            //drop cone
+            //lift up
+            //park in signal zone
             if (redVal > greenVal && redVal > blueVal) {
-                Trajectory Red = drive.trajectoryBuilder(AligntoPark.end())
-                        .strafeLeft(37)
+                Trajectory Red = drive.trajectoryBuilder(StrafeRightoAlignHighJunction.end())
+                        .strafeLeft(18)
                         .build();
                 drive.followTrajectory(Red);
-                telemetry.addData("red", "signal");
-                telemetry.update();
-                sleep(3000);
 
 
             }
             // if blue go to zone 2 (already there no if statement)
             else if (blueVal > redVal && blueVal > greenVal) {
-                /*Trajectory Blue = drive.trajectoryBuilder(AligntoPark.end())
-                        .back(12)
-                        .build();*/
-                // drive.followTrajectory(Blue);
-                telemetry.addData("blue", "signal");
-                telemetry.update();
-                sleep(3000);
+                Trajectory Blue = drive.trajectoryBuilder(StrafeRightoAlignHighJunction.end())
+                        .forward(7)
+                        .build();
+                drive.followTrajectory(Blue);
             } else if (greenVal > redVal && greenVal > blueVal) {
-                Trajectory Green = drive.trajectoryBuilder(AligntoPark.end())
-                        .strafeRight(35)
+                Trajectory Green = drive.trajectoryBuilder(StrafeRightoAlignHighJunction.end())
+                        .strafeRight(25)
                         .build();
                 drive.followTrajectory(Green);
-                telemetry.addData("green", "signal");
-                telemetry.update();
-                sleep(3000);
-            }
-            else{
-                telemetry.addData("no color", "sensed");
-                telemetry.addData("red: ", redVal);
-                telemetry.addData("green: ", greenVal);
-                telemetry.addData("blue: ", blueVal);
-                telemetry.update();
-                sleep(3000);
             }
         }
     }

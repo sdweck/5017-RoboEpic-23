@@ -16,7 +16,7 @@ import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
 @Config
 @Autonomous(name = "AutoRedRight", group = "drive")
-public class AutoRed extends LinearOpMode{
+public class AutoRedRight extends LinearOpMode{
 
     // Instance variables corresponding to our various motors/servos.
     private DcMotor LEFTBACK; //2:0
