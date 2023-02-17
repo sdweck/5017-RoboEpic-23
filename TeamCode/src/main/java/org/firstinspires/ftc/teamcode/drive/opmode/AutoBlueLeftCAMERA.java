@@ -13,6 +13,15 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.openftc.apriltag.AprilTagDetection;
+import org.openftc.easyopencv.OpenCvCamera;
+import org.openftc.easyopencv.OpenCvCameraFactory;
+import org.openftc.easyopencv.OpenCvCameraRotation;
+import org.openftc.easyopencv.OpenCvInternalCamera;
+
+import java.util.*;
+
 //import java.awt.
 
 @Config
@@ -30,6 +39,33 @@ public class AutoBlueLeftCAMERA extends LinearOpMode{
     private DcMotor LIFT;
     private ElapsedTime runtime = new ElapsedTime();
 
+    //CAMERA
+    OpenCvCamera CAMERA;
+    AprilTagDetectionPipeline aprilTagDetectionPipeline;
+
+    static final double FEET_PER_METER = 3.28084;
+
+    // Lens intrinsics
+    // UNITS ARE PIXELS
+    // NOTE: this calibration is for the C920 webcam at 800x448.
+    // You will need to do your own calibration for other configurations!
+    double fx = 578.272;
+    double fy = 578.272;
+    double cx = 402.145;
+    double cy = 221.506;
+
+    // UNITS ARE METERS
+    double tagsize = 0.166;
+
+    int ID_TAG_OF_INTEREST_18 = 18; // Tag ID 18 from the 36h11 family
+    int ID_TAG_OF_INTEREST_2 = 2; // Tag ID 18 from the 36h11 family
+    int ID_TAG_OF_INTEREST_5 = 5; // Tag ID 18 from the 36h11 family
+
+    AprilTagDetection tagOfInterest = null;
+    boolean tagFound2 = false;
+    boolean tagFound5 = false;
+    boolean tagFound18 = false;
+
     final double encRotation = 537.6;
 
     public void runOpMode() {
@@ -42,39 +78,133 @@ public class AutoBlueLeftCAMERA extends LinearOpMode{
         LIFT = hardwareMap.dcMotor.get("LIFT");
         INTAKE = hardwareMap.servo.get("INTAKE");
         ARM = hardwareMap.servo.get("ARM");
-
         LIFT.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        // CAMERA
+        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        CAMERA = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "CAMERA"), cameraMonitorViewId);
+        aprilTagDetectionPipeline = new AprilTagDetectionPipeline(tagsize, fx, fy, cx, cy);
+
+        CAMERA.setPipeline(aprilTagDetectionPipeline);
+        CAMERA.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
+
+        {
+            @Override
+            public void onOpened()
+            {
+                CAMERA.startStreaming(800,448, OpenCvCameraRotation.UPRIGHT);
+            }
+
+            @Override
+            public void onError(int errorCode)
+            {
+
+            }
+        });
 
         telemetry.addData("Status", "Initialized");
         telemetry.update();
         SampleMecanumDrive drive = new
                 SampleMecanumDrive(hardwareMap);
-        // Wait for the game to start (driver presses PLAY)y77
-        waitForStart();
+
+        /*
+         * The INIT-loop:
+         * This REPLACES waitForStart!
+         */
+        while (!isStarted() && !isStopRequested()){
+            ArrayList<AprilTagDetection> currentDetections = aprilTagDetectionPipeline.getLatestDetections();
+
+            if(currentDetections.size() != 0){
+
+                for(AprilTagDetection tag : currentDetections){
+                    if(tag.id == ID_TAG_OF_INTEREST_18){
+                        tagOfInterest = tag;
+                        tagFound18 = true;
+                        break;
+                    }
+
+                    else if (tag.id == ID_TAG_OF_INTEREST_2) {
+                        tagOfInterest = tag;
+                        tagFound2 = true;
+                        break;
+                    }
+
+                    else if (tag.id == ID_TAG_OF_INTEREST_5){
+                        tagOfInterest = tag;
+                        tagFound5 = true;
+                        break;
+                    }
+                }
+            }
+        }
 
         if (opModeIsActive()) {
-            LiftUpForTime(-1, 4.0);
+
+            // raise the lift
+            LiftUpForTime(-0.7, 3);
             LIFT.setPower(0);
-            Trajectory StrafetoSignalCone = drive.trajectoryBuilder(new Pose2d())
+
+            // forward to short junction
+            Trajectory StrafetoShortJunction = drive.trajectoryBuilder(new Pose2d())
                     .forward(39)
                     .build();
-            drive.followTrajectory(StrafetoSignalCone);
+            drive.followTrajectory(StrafetoShortJunction);
 
-            Trajectory StrafeRightTowardJunction = drive.trajectoryBuilder(StrafetoSignalCone.end())
+            // align with junction
+            Trajectory StrafeRightTowardJunction = drive.trajectoryBuilder(StrafetoShortJunction.end())
+                    //TEST THE STRAFING VALUE//
                     .strafeRight(7)
                     .build();
             drive.followTrajectory(StrafeRightTowardJunction);
-            Trajectory StrafeAway = drive.trajectoryBuilder(StrafetoSignalCone.end())
-                    .strafeLeft(7)
-                    .build();
-            drive.followTrajectory(StrafeAway);
+
+            // drop cone
             LiftUpForTime(.7, .5);
             INTAKE.setPosition(.25);
-            Trajectory AligntoPark = drive.trajectoryBuilder(StrafetoSignalCone.end())
+
+            // back up to signal row
+            Trajectory AligntoPark = drive.trajectoryBuilder(StrafeRightTowardJunction.end())
                     //TEST THE STRAFING VALUE//
                     .back(13)
                     .build();
             drive.followTrajectory(AligntoPark);
+
+            // if april tag 2 go to signal zone 1
+            if (tagFound2) {
+                Trajectory Red = drive.trajectoryBuilder(AligntoPark.end())
+                        .strafeLeft(35)
+                        .build();
+                drive.followTrajectory(Red);
+                telemetry.addData("tag 2", "found");
+                telemetry.update();
+                sleep(3000);
+
+
+            }
+
+            // if april tag 5 go to signal zone 2
+            else if (tagFound5) {
+                telemetry.addData("tag 5", "found");
+                telemetry.update();
+                sleep(3000);
+
+
+            }
+            // if april tag 18 go to signal zone 3
+            else if (tagFound18) {
+                Trajectory Green = drive.trajectoryBuilder(AligntoPark.end())
+                        .strafeRight(35)
+                        .build();
+                drive.followTrajectory(Green);
+                telemetry.addData("tag 18", "found");
+                telemetry.update();
+                sleep(3000);
+            }
+
+            else{
+                telemetry.addData("no april tag", "sensed");
+                sleep(3000);
+            }
+
 
         }
     }
@@ -131,7 +261,7 @@ public class AutoBlueLeftCAMERA extends LinearOpMode{
 
         stopEverything();
     }
-
+    //This is not using roadrunner! - DO NOT USE, not deleting as I think it affects the CrabforDistance function
     private void TurnForDistance(double power, double revolutions) {
         int denc = (int)Math.round(revolutions * encRotation);
 
@@ -169,7 +299,7 @@ public class AutoBlueLeftCAMERA extends LinearOpMode{
         stopEverything();
     }
 
-    private void CrabForDistance(double power, double revolutions) {
+    private void CrabForDistance (double power, double revolutions) {
         int denc = (int)Math.round(revolutions * encRotation);
 
         RIGHTFRONT.setDirection(DcMotorSimple.Direction.FORWARD);

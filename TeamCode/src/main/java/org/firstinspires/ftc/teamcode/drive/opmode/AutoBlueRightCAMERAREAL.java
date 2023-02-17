@@ -143,6 +143,8 @@ public class AutoBlueRightCAMERAREAL extends LinearOpMode{
             // raise the lift
             LiftUpForTime(-0.7, 3);
             LIFT.setPower(0);
+
+            //forward to short junction
             Trajectory StrafetoShortJunction = drive.trajectoryBuilder(new Pose2d())
                     .forward(40)
                     .build();
