@@ -30,6 +30,7 @@ public class AutoRedRight extends LinearOpMode{
     private DcMotor LIFT;
     private ElapsedTime runtime = new ElapsedTime();
 
+
     final double encRotation = 537.6;
 
     public void runOpMode() {
@@ -57,7 +58,7 @@ public class AutoRedRight extends LinearOpMode{
             LiftUpForTime(-0.7, 3);
             LIFT.setPower(0);
             Trajectory StrafetoSignalCone = drive.trajectoryBuilder(new Pose2d())
-                    .forward(19)
+                    .forward(16)
                     .build();
             drive.followTrajectory(StrafetoSignalCone);
             Trajectory StrafetoSenseSignalCone = drive.trajectoryBuilder(StrafetoSignalCone.end())
@@ -76,6 +77,12 @@ public class AutoRedRight extends LinearOpMode{
             double redVal = COLORSENSOR.red();
             double greenVal = COLORSENSOR.green();
             double blueVal = COLORSENSOR.blue();
+
+            telemetry.addData("Red", redVal);
+            telemetry.addData("Green", greenVal);
+            telemetry.addData("Blue", blueVal);
+            telemetry.update();
+            sleep(3000);
 
             Trajectory StrafeAwayfromSignalCone = drive.trajectoryBuilder(StrafetoSignalCone.end())
                     //TEST THE STRAFING VALUE//
