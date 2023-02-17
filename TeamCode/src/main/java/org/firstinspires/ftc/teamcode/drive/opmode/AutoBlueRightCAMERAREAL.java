@@ -11,16 +11,14 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
-
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.openftc.apriltag.AprilTagDetection;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
-import org.openftc.easyopencv.OpenCvInternalCamera;
 
-import java.util.*;
+import java.util.ArrayList;
 
 //import java.awt.
 
@@ -148,14 +146,14 @@ public class AutoBlueRightCAMERAREAL extends LinearOpMode{
             Trajectory StrafetoShortJunction = drive.trajectoryBuilder(new Pose2d())
                     .forward(40)
                     .build();
-            drive.followTrajectory(StrafetoShortJunction);
+            //drive.followTrajectory(StrafetoShortJunction);
 
             // strafe right toward junction
             Trajectory StrafeRightTowardJunction = drive.trajectoryBuilder(StrafetoShortJunction.end())
                     //TEST THE STRAFING VALUE//
                     .strafeRight(5)
                     .build();
-            drive.followTrajectory(StrafeRightTowardJunction);
+            //drive.followTrajectory(StrafeRightTowardJunction);
 
             // Cone Drop
             LiftUpForTime(0.7, 0.5);
@@ -166,16 +164,16 @@ public class AutoBlueRightCAMERAREAL extends LinearOpMode{
             Trajectory StrafeLefttoRecenter = drive.trajectoryBuilder(StrafeRightTowardJunction.end())
                     .strafeLeft(7)
                     .build();
-            drive.followTrajectory(StrafeLefttoRecenter);
+            //drive.followTrajectory(StrafeLefttoRecenter);
 
             // backwords to get to signal row 1
             Trajectory BackToGetToSignalRow = drive.trajectoryBuilder(StrafeLefttoRecenter.end())
                     .back(14)
                     .build();
-            drive.followTrajectory(BackToGetToSignalRow);
+            //drive.followTrajectory(BackToGetToSignalRow);
 
             // swing arm back
-            ARM.setPosition(0.83);
+            //ARM.setPosition(0.83);
             sleep(2000);
 
             // if april tag 2 go to signal zone 1
@@ -183,14 +181,13 @@ public class AutoBlueRightCAMERAREAL extends LinearOpMode{
                 Trajectory Red = drive.trajectoryBuilder(BackToGetToSignalRow.end())
                         .strafeLeft(35)
                         .build();
-                drive.followTrajectory(Red);
                 telemetry.addData("tag 2", "found");
                 telemetry.update();
                 sleep(3000);
 
 
             }
-
+            //help
             // if april tag 5 go to signal zone 2
             else if (tagFound5) {
                 telemetry.addData("tag 5", "found");
