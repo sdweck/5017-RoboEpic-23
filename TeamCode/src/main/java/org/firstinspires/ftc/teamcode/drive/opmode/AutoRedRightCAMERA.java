@@ -53,36 +53,10 @@ public class AutoRedRightCAMERA extends LinearOpMode{
 
         if (opModeIsActive()) {
             Trajectory StrafetoSignalCone = drive.trajectoryBuilder(new Pose2d())
-                    .forward(15)
+                    .forward(42)
                     .build();
             drive.followTrajectory(StrafetoSignalCone);
-            Trajectory StrafetoSenseSignalCone = drive.trajectoryBuilder(StrafetoSignalCone.end())
-                    //TEST THE STRAFING VALUE//
-                    .strafeRight(7)
-                    .build();
-            drive.followTrajectory(StrafetoSenseSignalCone);
-            while (COLORSENSOR.red() == 0 && opModeIsActive()){
-                // crab to the righct
-                telemetry.addData("Red", COLORSENSOR.red());
-                telemetry.addData("Green", COLORSENSOR.green());
-                telemetry.addData("Blue", COLORSENSOR.blue());
-                telemetry.update();
-            }
-
-            double redVal = COLORSENSOR.red();
-            double greenVal = COLORSENSOR.green();
-            double blueVal = COLORSENSOR.blue();
-            Trajectory StrafeAwayfromSignalCone = drive.trajectoryBuilder(StrafetoSignalCone.end())
-                    //TEST THE STRAFING VALUE//
-                    .strafeLeft(7)
-                    .build();
-            drive.followTrajectory(StrafeAwayfromSignalCone);
             //Forward to Medium Junction
-            Trajectory ForwardtoMedJunction = drive.trajectoryBuilder(StrafetoSenseSignalCone.end())
-                    .forward(27)
-                    .build();
-            drive.followTrajectory(ForwardtoMedJunction);
-            //Lift up
             LiftUpForTime(-1, 2.0);
 
             Trajectory StrafeRightoScoreMedJunction = drive.trajectoryBuilder(ForwardtoMedJunction.end())
