@@ -1,23 +1,22 @@
 package org.firstinspires.ftc.teamcode.drive.opmode;
-
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
-
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
 //import java.awt.
 
 @Config
-@Autonomous(name = "AutoBlueLeft", group = "drive")
-public class AutoBlueLeft extends LinearOpMode{
+@Autonomous(name = "AutoRedRightCAMERA", group = "drive")
+public class AutoRedRightCAMERA extends LinearOpMode{
 
     // Instance variables corresponding to our various motors/servos.
     private DcMotor LEFTBACK; //2:0
@@ -53,10 +52,8 @@ public class AutoBlueLeft extends LinearOpMode{
         waitForStart();
 
         if (opModeIsActive()) {
-            LiftUpForTime(-1, 4.0);
-            LIFT.setPower(0);
             Trajectory StrafetoSignalCone = drive.trajectoryBuilder(new Pose2d())
-                    .forward(17)
+                    .forward(15)
                     .build();
             drive.followTrajectory(StrafetoSignalCone);
             Trajectory StrafetoSenseSignalCone = drive.trajectoryBuilder(StrafetoSignalCone.end())
@@ -64,116 +61,103 @@ public class AutoBlueLeft extends LinearOpMode{
                     .strafeRight(7)
                     .build();
             drive.followTrajectory(StrafetoSenseSignalCone);
-
-            while (COLORSENSOR.red() == 0 && opModeIsActive()) {
+            while (COLORSENSOR.red() == 0 && opModeIsActive()){
                 // crab to the righct
                 telemetry.addData("Red", COLORSENSOR.red());
                 telemetry.addData("Green", COLORSENSOR.green());
                 telemetry.addData("Blue", COLORSENSOR.blue());
                 telemetry.update();
             }
+
             double redVal = COLORSENSOR.red();
             double greenVal = COLORSENSOR.green();
             double blueVal = COLORSENSOR.blue();
-
-            Trajectory StrafetoRecenterFromSignalCone = drive.trajectoryBuilder(StrafetoSignalCone.end())
+            Trajectory StrafeAwayfromSignalCone = drive.trajectoryBuilder(StrafetoSignalCone.end())
                     //TEST THE STRAFING VALUE//
                     .strafeLeft(7)
                     .build();
-            drive.followTrajectory(StrafetoRecenterFromSignalCone);
+            drive.followTrajectory(StrafeAwayfromSignalCone);
             //Forward to Medium Junction
             Trajectory ForwardtoMedJunction = drive.trajectoryBuilder(StrafetoSenseSignalCone.end())
-                    .forward(22)
+                    .forward(27)
                     .build();
             drive.followTrajectory(ForwardtoMedJunction);
-            Trajectory StrafeRightTowardJunction = drive.trajectoryBuilder(StrafetoSignalCone.end())
-                    //TEST THE STRAFING VALUE//
-                    .strafeRight(7)
-                    .build();
-            drive.followTrajectory(StrafeRightTowardJunction);
-            LiftUpForTime(.7, .5);
-            INTAKE.setPosition(.25);
-            Trajectory AligntoPark = drive.trajectoryBuilder(StrafetoSignalCone.end())
-                    //TEST THE STRAFING VALUE//
-                    .back(13)
-                    .build();
-            drive.followTrajectory(AligntoPark);
             //Lift up
-           /* Trajectory ForwardtoAlignwithStack = drive.trajectoryBuilder(ForwardtoMedJunction.end())
-                    .forward(13)
-                    .build();
-            drive.followTrajectory(ForwardtoAlignwithStack);*/
-            /*drive.turn(Math.toRadians(90));
-            Trajectory BackwardstoStackJunction = drive.trajectoryBuilder(ForwardtoAlignwithStack.end().plus(new Pose2d(0, 0, Math.toRadians(-90))), false)
-                    .back(29)
-                    .build();
-            drive.followTrajectory(BackwardstoStackJunction);
-            ARM.setPosition(.855);
-            LiftUpForTime(1, .5);*/
+            LiftUpForTime(-1, 2.0);
 
-
-         /*ajectory StrafeRightoScoreMedJunction = drive.trajectoryBuilder(ForwardtoMedJunction.end())
+            Trajectory StrafeRightoScoreMedJunction = drive.trajectoryBuilder(ForwardtoMedJunction.end())
                     .strafeRight(3)
                     .build();
             drive.followTrajectory(StrafeRightoScoreMedJunction);
-            //CONE DROP
+            //Lower Lift
+            LiftUpForTime(1, 1);
+            // Cone Drop
+            INTAKE.setPosition(.25);
+            //Raise Lift
+            LiftUpForTime(-1,.1);
             Trajectory StrafeLefttoRecenter = drive.trajectoryBuilder(ForwardtoMedJunction.end())
                     .strafeLeft(3)
                     .build();
             drive.followTrajectory(StrafeLefttoRecenter);
-
-
-            //Lower Lift
-            //Pick Up Stack
-            //Lift Lift
-
+            Trajectory ForwardtoAlignwithStack = drive.trajectoryBuilder(ForwardtoMedJunction.end())
+                    .forward(15)
+                    .build();
+            drive.followTrajectory(ForwardtoAlignwithStack);
+            Trajectory StrafetoConeStack = drive.trajectoryBuilder(ForwardtoMedJunction.end())
+                    .strafeRight(23)
+                    .build();
+            drive.followTrajectory(StrafetoConeStack);
             Trajectory StrafeRightoAlignHighJunction = drive.trajectoryBuilder(ForwardtoMedJunction.end())
                     .strafeRight(3)
                     .build();
-            drive.followTrajectory(StrafeRightoAlignHighJunction);*/
-            //swing arm back right
-            //lift lidt
-            //drop lidt
-            //drop cone
-            //lift up
-            //park in signal zone
+            drive.followTrajectory(StrafeRightoAlignHighJunction);
+            //Lower Lift
+            LiftUpForTime(1,.2);
+            //Pick Up Cone
+            INTAKE.setPosition(0.8);
+            //Raise Lift
+            LiftUpForTime(-1,2);
+            //Swimg Arm Forward
+            ARM.setPosition(.155);
+            Trajectory StrafeLefttoHighJunction = drive.trajectoryBuilder(ForwardtoMedJunction.end())
+                    .strafeLeft(36)
+                    .build();
+            drive.followTrajectory(StrafeLefttoHighJunction);
+            Trajectory ForwardtoScoreHighJunction = drive.trajectoryBuilder(ForwardtoMedJunction.end())
+                    .forward(5)
+                    .build();
+            drive.followTrajectory(ForwardtoScoreHighJunction);
+            Trajectory BacktoPark = drive.trajectoryBuilder(ForwardtoMedJunction.end())
+                    .back(2)
+                    .build();
+            drive.followTrajectory(BacktoPark);
+
+            //Lower Lift
+            LiftUpForTime(1,.2);
+            //Drop Cone
+            INTAKE.setPosition(.25);
+
             if (redVal > greenVal && redVal > blueVal) {
-                Trajectory Red = drive.trajectoryBuilder(ForwardtoMedJunction.end())
-                        .strafeLeft(37)
+                Trajectory Red = drive.trajectoryBuilder(BacktoPark.end())
+                        .strafeLeft(35)
                         .build();
                 drive.followTrajectory(Red);
-                telemetry.addData("red", "signal");
-                telemetry.update();
-                sleep(3000);
+
 
 
             }
-            // if blue go to zone 2 (already there no if statement)
-            else if (blueVal > redVal && blueVal > greenVal) {
-                /*Trajectory Blue = drive.trajectoryBuilder(ForwardtoMedJunction.end())
-                        .back(12)
-                        .build();*/
-               // drive.followTrajectory(Blue);
-                telemetry.addData("blue", "signal");
-                telemetry.update();
-                sleep(3000);
-            } else if (greenVal > redVal && greenVal > blueVal) {
-                Trajectory Green = drive.trajectoryBuilder(ForwardtoMedJunction.end())
-                        .strafeRight(35)
+
+
+            else if (greenVal > redVal && greenVal > blueVal) {
+                Trajectory Green = drive.trajectoryBuilder(BacktoPark.end())
+                        .strafeLeft(15)
                         .build();
                 drive.followTrajectory(Green);
-                telemetry.addData("green", "signal");
-                telemetry.update();
-                sleep(3000);
+
+
             }
-            else{
-                telemetry.addData("no color", "sensed");
-                telemetry.addData("red: ", redVal);
-                telemetry.addData("green: ", greenVal);
-                telemetry.addData("blue: ", blueVal);
-                telemetry.update();
-                sleep(3000);
-            }
+
+
         }
     }
 
@@ -184,7 +168,7 @@ public class AutoBlueLeft extends LinearOpMode{
         RIGHTBACK.setPower(0);
     }
 
-    private void LiftUpForTime(double power, double time){
+    private void LiftUpForTime (double power, double time){
         runtime.reset();
         while (runtime.seconds() <= time) {
             telemetry.addData("lift", "function");
@@ -229,7 +213,7 @@ public class AutoBlueLeft extends LinearOpMode{
 
         stopEverything();
     }
-
+    //This is not using roadrunner! - DO NOT USE, not deleting as I think it affects the CrabforDistance function
     private void TurnForDistance(double power, double revolutions) {
         int denc = (int)Math.round(revolutions * encRotation);
 
@@ -267,7 +251,7 @@ public class AutoBlueLeft extends LinearOpMode{
         stopEverything();
     }
 
-    private void CrabForDistance(double power, double revolutions) {
+    private void CrabForDistance (double power, double revolutions) {
         int denc = (int)Math.round(revolutions * encRotation);
 
         RIGHTFRONT.setDirection(DcMotorSimple.Direction.FORWARD);

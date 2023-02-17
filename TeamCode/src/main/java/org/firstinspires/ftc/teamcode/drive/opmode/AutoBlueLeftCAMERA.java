@@ -16,8 +16,8 @@ import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 //import java.awt.
 
 @Config
-@Autonomous(name = "AutoBlueLeft", group = "drive")
-public class AutoBlueLeft extends LinearOpMode{
+@Autonomous(name = "AutoBlueLeftCAMERA", group = "drive")
+public class AutoBlueLeftCAMERA extends LinearOpMode{
 
     // Instance variables corresponding to our various motors/servos.
     private DcMotor LEFTBACK; //2:0
@@ -65,13 +65,13 @@ public class AutoBlueLeft extends LinearOpMode{
                     .build();
             drive.followTrajectory(StrafetoSenseSignalCone);
 
-            while (COLORSENSOR.red() == 0 && opModeIsActive()) {
+          /*  while (COLORSENSOR.red() == 0 && opModeIsActive()) {
                 // crab to the righct
                 telemetry.addData("Red", COLORSENSOR.red());
                 telemetry.addData("Green", COLORSENSOR.green());
                 telemetry.addData("Blue", COLORSENSOR.blue());
                 telemetry.update();
-            }
+            }*/
             double redVal = COLORSENSOR.red();
             double greenVal = COLORSENSOR.green();
             double blueVal = COLORSENSOR.blue();
@@ -153,7 +153,7 @@ public class AutoBlueLeft extends LinearOpMode{
                 /*Trajectory Blue = drive.trajectoryBuilder(ForwardtoMedJunction.end())
                         .back(12)
                         .build();*/
-               // drive.followTrajectory(Blue);
+                // drive.followTrajectory(Blue);
                 telemetry.addData("blue", "signal");
                 telemetry.update();
                 sleep(3000);
