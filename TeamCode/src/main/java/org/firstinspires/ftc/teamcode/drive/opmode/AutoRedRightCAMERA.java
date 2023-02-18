@@ -23,8 +23,8 @@ import java.util.ArrayList;
 //import java.awt.
 
 @Config
-@Autonomous(name = "AutoBlueRightCAMERAREAL", group = "drive")
-public class AutoBlueRightCAMERAREAL extends LinearOpMode{
+@Autonomous(name = "AutoRedRightCAMERAREAL", group = "drive")
+public class AutoRedRightCAMERA extends LinearOpMode{
 
     // Instance variables corresponding to our various motors/servos.
     private DcMotor LEFTBACK; //2:0

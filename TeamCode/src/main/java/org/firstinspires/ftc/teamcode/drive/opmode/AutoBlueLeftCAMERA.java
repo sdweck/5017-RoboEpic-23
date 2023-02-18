@@ -11,16 +11,14 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
-
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.openftc.apriltag.AprilTagDetection;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
-import org.openftc.easyopencv.OpenCvInternalCamera;
 
-import java.util.*;
+import java.util.ArrayList;
 
 //import java.awt.
 
@@ -141,12 +139,12 @@ public class AutoBlueLeftCAMERA extends LinearOpMode{
         if (opModeIsActive()) {
 
             // raise the lift
-            LiftUpForTime(-0.7, 3);
+            LiftUpForTime(-0.7, 3.5);
             LIFT.setPower(0);
 
             // forward to short junction
             Trajectory StrafetoShortJunction = drive.trajectoryBuilder(new Pose2d())
-                    .forward(39)
+                    .forward(39.5)
                     .build();
             drive.followTrajectory(StrafetoShortJunction);
 
@@ -158,7 +156,7 @@ public class AutoBlueLeftCAMERA extends LinearOpMode{
             drive.followTrajectory(StrafeRightTowardJunction);
 
             // drop cone
-            LiftUpForTime(.7, .5);
+            //LiftUpForTime(.7, .5);
             INTAKE.setPosition(.25);
 
             // back up to signal row
